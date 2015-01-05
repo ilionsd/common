@@ -3,6 +3,8 @@ package com.insign.common.linearalgebra;
 /**
  * Created by ilion on 05.01.2015.
  */
-public class IndexException extends RuntimeException {
+public class LinearSystem {
+    public static class Solve {
 
+    }
 }
