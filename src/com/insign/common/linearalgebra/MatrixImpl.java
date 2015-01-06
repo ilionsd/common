@@ -64,12 +64,32 @@ public class MatrixImpl extends AbstractMatrix implements Matrix {
 
     @Override
     public MatrixImpl add(Matrix matrix) {
-        throw new NotImplementedException();
+        if (matrix == null)
+            throw new NullPointerException("Matrix cannot be null");
+        if (getRowsCount() != matrix.getRowsCount() || getColumnsCount() != matrix.getColumnsCount())
+            throw new InvalidParameterException(matrix, "Matrix size is not " + getRowsCount() + "x" + getColumnsCount());
+        MatrixImpl result = new MatrixImpl(getRowsCount(), getColumnsCount());
+        for (int i = 0; i < getRowsCount(); i++)
+            for (int j = 0; j < getColumnsCount(); j++)
+                result.set(i, j, get(i, j) + matrix.get(i, j));
+        return result;
     }
 
     @Override
     public MatrixImpl multiply(Matrix matrix) {
-        throw new NotImplementedException();
+        if (matrix == null)
+            throw new NullPointerException("matrix cannot be null");
+        if (getColumnsCount() != matrix.getRowsCount())
+            throw new InvalidParameterException(matrix, "Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + matrix.getRowsCount() + "x" + matrix.getColumnsCount());
+        MatrixImpl result = new MatrixImpl(getRowsCount(), matrix.getColumnsCount());
+        for (int i = 0; i < result.getRowsCount(); i++)
+            for (int j = 0; j < result.getColumnsCount(); j++) {
+                double sum = 0;
+                for (int k = 0; k < getColumnsCount(); k++)
+                    sum += get(i, k) * matrix.get(k, j);
+                result.set(i, j, sum);
+            }
+        return result;
     }
 
 
