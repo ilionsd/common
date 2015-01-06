@@ -5,19 +5,14 @@ package com.insign.common.linearalgebra;
  */
 public interface Matrix {
     double get(int row, int column);
-
     Matrix set(int row, int column, double value);
 
     int getRowsCount();
-
     int getColumnsCount();
 
+    Matrix add(Matrix matrix);
 
-    Matrix Add(Matrix matrix);
+    Matrix multiply(Matrix matrix);
 
-    Matrix Multiply(Matrix matrix);
-
-    public static class LinearSystem {
-
-    }
+    Vector multiply(Vector vector);
 }

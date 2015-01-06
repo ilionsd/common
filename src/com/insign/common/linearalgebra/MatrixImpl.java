@@ -7,10 +7,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Created by ilion on 05.01.2015.
  */
-public class MatrixImpl implements Matrix {
-    protected double[] array;
-    protected int rowsCount;
-    protected int columnsCount;
+public class MatrixImpl extends AbstractMatrix implements Matrix {
+    @Override
+    public Vector multiply(Vector vector) {
+        return null;
+    }
 
     public MatrixImpl(int rowsCount, int columnsCount) {
         this.rowsCount = rowsCount;
@@ -37,6 +38,7 @@ public class MatrixImpl implements Matrix {
         return e;
     }
 
+    @Override
     public double get(int row, int column) {
         if (row >= 0 && column >= 0 && row < rowsCount && column < columnsCount)
             return array[columnsCount * row + column];
@@ -44,24 +46,29 @@ public class MatrixImpl implements Matrix {
             throw new IndexException(row, column, rowsCount, columnsCount);
     }
 
+    @Override
     public Matrix set(int row, int column, double value) {
         array[columnsCount * row + column] = value;
         return this;
     }
 
+    @Override
     public int getRowsCount() {
         return rowsCount;
     }
 
+    @Override
     public int getColumnsCount() {
         return columnsCount;
     }
 
-    public MatrixImpl Add(Matrix matrix) {
+    @Override
+    public MatrixImpl add(Matrix matrix) {
         throw new NotImplementedException();
     }
 
-    public MatrixImpl Multiply(Matrix matrix) {
+    @Override
+    public MatrixImpl multiply(Matrix matrix) {
         throw new NotImplementedException();
     }
 
