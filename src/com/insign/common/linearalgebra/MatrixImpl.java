@@ -8,10 +8,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Created by ilion on 05.01.2015.
  */
 public class MatrixImpl extends AbstractMatrix implements Matrix {
-    @Override
-    public Vector multiply(Vector vector) {
-        return null;
-    }
 
     public MatrixImpl(int rowsCount, int columnsCount) {
         this.rowsCount = rowsCount;
@@ -80,7 +76,7 @@ public class MatrixImpl extends AbstractMatrix implements Matrix {
         if (matrix == null)
             throw new NullPointerException("matrix cannot be null");
         if (getColumnsCount() != matrix.getRowsCount())
-            throw new InvalidParameterException(matrix, "Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + matrix.getRowsCount() + "x" + matrix.getColumnsCount());
+            throw new InvalidParameterException(matrix, "Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + matrix.getRowsCount() + "x" + matrix.getColumnsCount() + " matrix");
         MatrixImpl result = new MatrixImpl(getRowsCount(), matrix.getColumnsCount());
         for (int i = 0; i < result.getRowsCount(); i++)
             for (int j = 0; j < result.getColumnsCount(); j++) {
@@ -89,6 +85,29 @@ public class MatrixImpl extends AbstractMatrix implements Matrix {
                     sum += get(i, k) * matrix.get(k, j);
                 result.set(i, j, sum);
             }
+        return result;
+    }
+
+    @Override
+    public MatrixImpl multiply(double multiplier) {
+        MatrixImpl result = new MatrixImpl(getRowsCount(), getColumnsCount());
+        for (int k = 0; k < result.array.length; k++)
+            result.array[k] = array[k] * multiplier;
+        return result;
+    }
+
+    @Override
+    public VectorImpl multiply(Vector vector) {
+        if (vector == null)
+            throw new NullPointerException("matrix cannot be null");
+        if (getColumnsCount() != vector.getSize())
+            throw new InvalidParameterException(vector, "Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + vector.getSize() + " vector");
+        VectorImpl result = new VectorImpl(vector.getSize());
+        for (int index = 0; index < result.getSize(); index++) {
+            double sum = 0;
+            for (int k = 0; k < vector.getSize(); k++)
+                sum += get(index, k) * vector.get(k);
+        }
         return result;
     }
 
