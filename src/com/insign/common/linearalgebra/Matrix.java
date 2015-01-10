@@ -3,9 +3,11 @@ package com.insign.common.linearalgebra;
 /**
  * Created by ilion on 05.01.2015.
  */
-public interface Matrix {
+public interface Matrix extends LinearObject {
+
     double get(int row, int column);
-    Matrix set(int row, int column, double value);
+
+    void set(int row, int column, double value);
 
     int getRowsCount();
     int getColumnsCount();
@@ -14,5 +16,7 @@ public interface Matrix {
 
     Matrix multiply(Matrix matrix);
 
+    Matrix multiply(double multiplier);
     Vector multiply(Vector vector);
+
 }

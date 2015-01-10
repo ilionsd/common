@@ -1,10 +1,10 @@
 package com.insign.common.linearalgebra;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
- * Created by ilion on 06.01.2015.
+ * Created by ilion on 10.01.2015.
  */
-public class MatrixFactory {
+public interface MatrixFactory {
+	AbstractMatrix newInstance(int rowsCount, int columnsCount);
 
+	AbstractMatrix newInstance(double[][] matrix);
 }

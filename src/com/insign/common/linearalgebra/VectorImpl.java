@@ -1,12 +1,11 @@
 package com.insign.common.linearalgebra;
 
 import com.insign.common.linearalgebra.exceptions.InvalidParameterException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by ilion on 05.01.2015.
  */
-public class VectorImpl extends AbstractMatrix implements Vector {
+public class VectorImpl extends AbstractLinearObject implements Vector {
 
     public VectorImpl(int size) {
         rowsCount = size;
