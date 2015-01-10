@@ -5,11 +5,14 @@ import com.insign.common.linearalgebra.exceptions.InvalidParameterException;
 /**
  * Created by ilion on 05.01.2015.
  */
-public class VectorImpl extends AbstractLinearObject implements Vector {
+public final class VectorImpl extends AbstractVector {
+
+    double[] array;
+    int size;
+    boolean isTransposed = false;
 
     public VectorImpl(int size) {
-        rowsCount = size;
-        columnsCount = 1;
+        this.size = size;
         array = new double[getSize()];
     }
 
@@ -26,14 +29,13 @@ public class VectorImpl extends AbstractLinearObject implements Vector {
     }
 
     @Override
-    public Vector set(int index, double value) {
+    public void set(int index, double value) {
         array[index] = value;
-        return this;
     }
 
     @Override
     public int getSize() {
-        return rowsCount;
+        return size;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class VectorImpl extends AbstractLinearObject implements Vector {
     public Matrix multiply(Matrix matrix) {
         if (matrix == null)
             throw new NullPointerException("Matrix cannot be null");
-        if (columnsCount != matrix.getRowsCount())
+        if (1 != matrix.getRowsCount())
             throw new InvalidParameterException(matrix, "Cannot multiply " + matrix.getRowsCount() + "x" + matrix.getColumnsCount() + " matrix");
         MatrixImpl result = new MatrixImpl(getSize(), matrix.getColumnsCount());
         for (int i = 0; i < result.getRowsCount(); i++)
@@ -70,5 +72,11 @@ public class VectorImpl extends AbstractLinearObject implements Vector {
         if (array == null || array.length == 0)
             return false;
         return true;
+    }
+
+    @Override
+    public VectorImpl transpose() {
+        isTransposed = !isTransposed;
+        return this;
     }
 }
