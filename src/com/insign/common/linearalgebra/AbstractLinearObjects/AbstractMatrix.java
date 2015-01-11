@@ -1,4 +1,9 @@
-package com.insign.common.linearalgebra;
+package com.insign.common.linearalgebra.AbstractLinearObjects;
+
+import com.insign.common.linearalgebra.LinearObjects.Matrix;
+import com.insign.common.linearalgebra.LinearObjects.Vector;
+import com.insign.common.linearalgebra.MatrixImpl;
+import com.insign.common.linearalgebra.exceptions.IndexException;
 
 import java.util.Objects;
 
@@ -8,8 +13,35 @@ import java.util.Objects;
 public abstract class AbstractMatrix implements Matrix {
 
 	protected abstract MatrixFactory getMatrixFactory();
-
 	protected abstract VectorFactory getVectorFactory();
+
+	@Override
+	public abstract int getRowsCount();
+
+	@Override
+	public abstract int getColumnsCount();
+
+	public abstract boolean isTransposed();
+
+	@Override
+	public Vector getRow(int index) {
+		if (index < 0 || index >= getRowsCount())
+			throw new IndexException(index, 0, getRowsCount(), getColumnsCount());
+		Vector vector = getVectorFactory().newInstance(getColumnsCount(), true);
+		for (int k = 0; k < vector.getSize(); k++)
+			vector.set(k, get(index, k));
+		return vector;
+	}
+
+	@Override
+	public Vector getColumn(int index) {
+		if (index < 0 || index >= getColumnsCount())
+			throw new IndexException(0, index, getRowsCount(), getColumnsCount());
+		Vector vector = getVectorFactory().newInstance(getColumnsCount());
+		for (int k = 0; k < vector.getSize(); k++)
+			vector.set(k, get(k, index));
+		return vector;
+	}
 
 	@Override
 	public Matrix add(Matrix matrix) {

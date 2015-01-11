@@ -1,4 +1,4 @@
-package com.insign.common.linearalgebra;
+package com.insign.common.linearalgebra.LinearObjects;
 
 /**
  * Created by ilion on 05.01.2015.
@@ -9,9 +9,9 @@ public interface Matrix extends LinearObject {
 
 	void set(int row, int column, double value);
 
-	int getRowsCount();
-
-	int getColumnsCount();
+//	int getRowsCount();
+//
+//	int getColumnsCount();
 
 	Matrix add(Matrix matrix);
 
@@ -20,5 +20,12 @@ public interface Matrix extends LinearObject {
 	Matrix multiply(double multiplier);
 
 	Vector multiply(Vector vector);
+
+	@Override
+	Matrix transpose();
+
+	LinearObject getRow(int index);
+
+	LinearObject getColumn(int index);
 
 }

@@ -1,5 +1,8 @@
 package com.insign.common.linearalgebra;
 
+import com.insign.common.linearalgebra.AbstractLinearObjects.AbstractMatrix;
+import com.insign.common.linearalgebra.AbstractLinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.AbstractLinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.exceptions.IndexException;
 
 /**
@@ -72,6 +75,11 @@ public final class MatrixImpl extends AbstractMatrix {
 			array[rowsCount * column + row] = value;
 		else
 			array[rowsCount * row + column] = value;
+	}
+
+	@Override
+	public boolean isTransposed() {
+		return isTransposed;
 	}
 
 	@Override

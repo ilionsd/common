@@ -1,9 +1,7 @@
 package com.insign.common.linearalgebra;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import com.insign.common.linearalgebra.AbstractLinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.LinearObjects.Matrix;
 
 /**
  * Created by ilion on 06.01.2015.
