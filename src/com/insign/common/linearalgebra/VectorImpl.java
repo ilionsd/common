@@ -1,11 +1,11 @@
 package com.insign.common.linearalgebra;
 
-import com.insign.common.linearalgebra.exceptions.InvalidParameterException;
 
 /**
  * Created by ilion on 05.01.2015.
  */
 public final class VectorImpl extends AbstractVector {
+    public static final VectorFactory FACTORY = new VectorFactoryImpl();
 
     double[] array;
     int size;
@@ -18,7 +18,7 @@ public final class VectorImpl extends AbstractVector {
 
     public VectorImpl(double[] vector) {
         if (!isValid(vector))
-            throw new InvalidParameterException(vector, "Not null, not empty");
+            throw new IllegalArgumentException("Not null, not empty array expected");
         for (int index = 0; index < getSize(); index++)
             set(index, vector[index]);
     }
@@ -36,18 +36,6 @@ public final class VectorImpl extends AbstractVector {
     @Override
     public int getSize() {
         return size;
-    }
-
-    @Override
-    public Vector add(Vector vector) {
-        if (vector == null)
-            throw new NullPointerException("Vector cannot be null");
-        if (getSize() != vector.getSize())
-            throw new InvalidParameterException(vector, "Vectors cannot have unequal size");
-        VectorImpl result = new VectorImpl(getSize());
-        for (int index = 0; index < result.getSize(); index++)
-            result.set(index, get(index) + vector.get(index));
-        return result;
     }
 
     @Override

@@ -11,12 +11,12 @@ import java.lang.reflect.InvocationTargetException;
 public class MatrixFactoryImpl implements MatrixFactory {
 
 	@Override
-	public AbstractMatrix newInstance(int rowsCount, int columnsCount) {
+	public Matrix newInstance(int rowsCount, int columnsCount) {
 		return new MatrixImpl(rowsCount, columnsCount);
 	}
 
 	@Override
-	public AbstractMatrix newInstance(double[][] matrix) {
+	public Matrix newInstance(double[][] matrix) {
 		return new MatrixImpl(matrix);
 	}
 }

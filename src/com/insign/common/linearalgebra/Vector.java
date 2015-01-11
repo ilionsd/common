@@ -5,14 +5,14 @@ package com.insign.common.linearalgebra;
  */
 public interface Vector extends LinearObject {
     double get(int index);
-
     void set(int index, double value);
 
     int getSize();
 
     Vector add(Vector vector);
 
-    Matrix multiply(Matrix matrix);
+    Vector multiply(Matrix matrix);
 
+    Vector multiply(Vector vector);
     Vector multiply(double multiplier);
 }

@@ -5,6 +5,5 @@ package com.insign.common.linearalgebra;
  */
 public interface VectorFactory {
 	Vector newInstance(int size);
-
 	Vector newInstance(double[] vector);
 }

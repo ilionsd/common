@@ -5,18 +5,20 @@ package com.insign.common.linearalgebra;
  */
 public interface Matrix extends LinearObject {
 
-    double get(int row, int column);
+	double get(int row, int column);
 
-    void set(int row, int column, double value);
+	void set(int row, int column, double value);
 
-    int getRowsCount();
-    int getColumnsCount();
+	int getRowsCount();
 
-    Matrix add(Matrix matrix);
+	int getColumnsCount();
 
-    Matrix multiply(Matrix matrix);
+	Matrix add(Matrix matrix);
 
-    Matrix multiply(double multiplier);
-    Vector multiply(Vector vector);
+	Matrix multiply(Matrix matrix);
+
+	Matrix multiply(double multiplier);
+
+	Vector multiply(Vector vector);
 
 }

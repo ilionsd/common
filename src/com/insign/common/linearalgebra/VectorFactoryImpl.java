@@ -5,12 +5,12 @@ package com.insign.common.linearalgebra;
  */
 public class VectorFactoryImpl implements VectorFactory {
 	@Override
-	public AbstractVector newInstance(int size) {
+	public Vector newInstance(int size) {
 		return new VectorImpl(size);
 	}
 
 	@Override
-	public AbstractVector newInstance(double[] vector) {
+	public Vector newInstance(double[] vector) {
 		return new VectorImpl(vector);
 	}
 }
