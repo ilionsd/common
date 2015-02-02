@@ -1,8 +1,8 @@
 package com.insign.common.linearalgebra;
 
 import com.insign.common.linearalgebra.AbstractLinearObjects.AbstractMatrix;
-import com.insign.common.linearalgebra.AbstractLinearObjects.MatrixFactory;
-import com.insign.common.linearalgebra.AbstractLinearObjects.VectorFactory;
+import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.exceptions.IndexException;
 
 /**
@@ -16,7 +16,6 @@ public final class MatrixImpl extends AbstractMatrix {
 	int rowsCount;
 	int columnsCount;
 	boolean isTransposed = false;
-
 
 	public MatrixImpl(int rowsCount, int columnsCount) {
 		this.rowsCount = rowsCount;
@@ -37,12 +36,11 @@ public final class MatrixImpl extends AbstractMatrix {
 	}
 
 	@Override
-	public MatrixImpl transpose() {
+	public void transpose() {
 		isTransposed = !isTransposed;
 		int temp = rowsCount;
 		rowsCount = columnsCount;
 		columnsCount = temp;
-		return this;
 	}
 
 	@Override

@@ -15,4 +15,6 @@ public interface MatrixBase extends LinearObject {
 	void setRow(int row, Vector vector);
 
 	void setColumn(int column, Vector vector);
+
+
 }

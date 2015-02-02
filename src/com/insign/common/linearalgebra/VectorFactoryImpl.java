@@ -1,6 +1,6 @@
 package com.insign.common.linearalgebra;
 
-import com.insign.common.linearalgebra.AbstractLinearObjects.VectorFactory;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
 
 /**
@@ -15,7 +15,9 @@ public class VectorFactoryImpl implements VectorFactory {
 	@Override
 	public Vector newInstance(int size, boolean isTransposed) {
 		VectorImpl vector = new VectorImpl(size);
-		return (isTransposed) ? vector.transpose() : vector;
+		if (isTransposed)
+			vector.transpose();
+		return vector;
 	}
 
 	@Override

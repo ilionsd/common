@@ -2,8 +2,8 @@ package com.insign.common.linearalgebra;
 
 
 import com.insign.common.linearalgebra.AbstractLinearObjects.AbstractVector;
-import com.insign.common.linearalgebra.AbstractLinearObjects.MatrixFactory;
-import com.insign.common.linearalgebra.AbstractLinearObjects.VectorFactory;
+import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 
 /**
  * Created by ilion on 05.01.2015.
@@ -28,9 +28,8 @@ public final class VectorImpl extends AbstractVector {
 	}
 
 	@Override
-	public VectorImpl transpose() {
+	public void transpose() {
 		isTransposed = !isTransposed;
-		return this;
 	}
 
 	@Override

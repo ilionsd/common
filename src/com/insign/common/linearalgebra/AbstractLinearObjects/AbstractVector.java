@@ -1,7 +1,9 @@
 package com.insign.common.linearalgebra.AbstractLinearObjects;
 
 import com.insign.common.linearalgebra.LinearObjects.Matrix;
+import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 
 import java.util.Objects;
 
@@ -13,6 +15,11 @@ public abstract class AbstractVector implements Vector {
 	protected abstract VectorFactory getVectorFactory();
 
 	protected abstract MatrixFactory getMatrixFactory();
+
+	@Override
+	public VectorFactory getFactory() {
+		return getVectorFactory();
+	}
 
 	@Override
 	public abstract int getRowsCount();
@@ -38,7 +45,8 @@ public abstract class AbstractVector implements Vector {
 		Objects.requireNonNull(matrix, "Matrix cannot be null");
 		if (1 != matrix.getRowsCount())
 			throw new IllegalArgumentException("Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " vector and " + matrix.getRowsCount() + "x" + matrix.getColumnsCount() + " matrix");
-		Vector result = getVectorFactory().newInstance(matrix.getColumnsCount()).transpose();
+		Vector result = getVectorFactory().newInstance(matrix.getColumnsCount());
+		result.transpose();
 		for (int index = 0; index < result.getColumnsCount(); index++) {
 			double sum = 0;
 			for (int k = 0; k < getColumnsCount(); k++)
@@ -70,5 +78,20 @@ public abstract class AbstractVector implements Vector {
 		for (int index = 0; index < result.getSize(); index++)
 			result.set(index, get(index) * multiplier);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder()
+				.append("<");
+		for (int k = 0; k < getSize(); k++) {
+			sb.append(get(k));
+			if (k != getSize() - 1)
+				sb.append(" ;");
+		}
+		sb.append(">");
+		if (isTransposed())
+			sb.append("T");
+		return sb.toString();
 	}
 }

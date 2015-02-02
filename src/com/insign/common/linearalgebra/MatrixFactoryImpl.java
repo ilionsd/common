@@ -1,6 +1,6 @@
 package com.insign.common.linearalgebra;
 
-import com.insign.common.linearalgebra.AbstractLinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
 import com.insign.common.linearalgebra.LinearObjects.Matrix;
 
 /**

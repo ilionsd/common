@@ -1,7 +1,9 @@
 package com.insign.common.linearalgebra.AbstractLinearObjects;
 
 import com.insign.common.linearalgebra.LinearObjects.Matrix;
+import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.exceptions.IndexException;
 
@@ -16,6 +18,11 @@ public abstract class AbstractMatrix implements Matrix {
 	protected abstract VectorFactory getVectorFactory();
 
 	@Override
+	public MatrixFactory getFactory() {
+		return getMatrixFactory();
+	}
+
+	@Override
 	public abstract int getRowsCount();
 
 	@Override
@@ -24,23 +31,41 @@ public abstract class AbstractMatrix implements Matrix {
 	public abstract boolean isTransposed();
 
 	@Override
-	public Vector getRow(int index) {
-		if (index < 0 || index >= getRowsCount())
-			throw new IndexException(index, 0, getRowsCount(), getColumnsCount());
+	public Vector getRow(int row) {
+		if (row < 0 || row >= getRowsCount())
+			throw new IndexException(row, 0, getRowsCount(), getColumnsCount());
 		Vector vector = getVectorFactory().newInstance(getColumnsCount(), true);
 		for (int k = 0; k < vector.getSize(); k++)
-			vector.set(k, get(index, k));
+			vector.set(k, get(row, k));
 		return vector;
 	}
 
 	@Override
-	public Vector getColumn(int index) {
-		if (index < 0 || index >= getColumnsCount())
-			throw new IndexException(0, index, getRowsCount(), getColumnsCount());
+	public Vector getColumn(int column) {
+		if (column < 0 || column >= getColumnsCount())
+			throw new IndexException(0, column, getRowsCount(), getColumnsCount());
 		Vector vector = getVectorFactory().newInstance(getColumnsCount());
 		for (int k = 0; k < vector.getSize(); k++)
-			vector.set(k, get(k, index));
+			vector.set(k, get(k, column));
 		return vector;
+	}
+
+	@Override
+	public void setRow(int row, Vector vector) {
+		Objects.requireNonNull(vector, "Vector can not be null");
+		if (getColumnsCount() != vector.getSize())
+			throw new IllegalArgumentException("Vector could not be different size with columns count");
+		for (int j = 0; j < getColumnsCount(); j++)
+			set(row, j, vector.get(j));
+	}
+
+	@Override
+	public void setColumn(int column, Vector vector) {
+		Objects.requireNonNull(vector, "Vector can not be null");
+		if (getRowsCount() != vector.getSize())
+			throw new IllegalArgumentException("Vector could not be different size with rows count");
+		for (int i = 0; i < getRowsCount(); i++)
+			set(column, i, vector.get(i));
 	}
 
 	@Override
