@@ -3,12 +3,13 @@ package com.insign.common.linearalgebra;
 
 import com.insign.common.linearalgebra.AbstractLinearObjects.AbstractVector;
 import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
+import com.insign.common.linearalgebra.LinearObjects.Vector;
 import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 
 /**
  * Created by ilion on 05.01.2015.
  */
-public final class VectorImpl extends AbstractVector {
+public final class VectorImpl extends AbstractVector implements Cloneable {
 	public static final VectorFactory FACTORY = new VectorFactoryImpl();
 
 	double[] array;
@@ -23,8 +24,18 @@ public final class VectorImpl extends AbstractVector {
 	public VectorImpl(double[] vector) {
 		if (!isValid(vector))
 			throw new IllegalArgumentException("Not null, not empty array expected");
+		size = vector.length;
+		array = new double[getSize()];
 		for (int index = 0; index < getSize(); index++)
 			set(index, vector[index]);
+	}
+
+	public VectorImpl(Vector vector) {
+		size = vector.getSize();
+		array = new double[getSize()];
+		isTransposed = vector.getRowsCount() == 1;
+		for (int k = 0; k < getSize(); k++)
+			set(k, vector.get(k));
 	}
 
 	@Override

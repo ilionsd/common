@@ -1,7 +1,7 @@
 package com.insign.common.linearalgebra;
 
-import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
+import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 
 /**
  * Created by ilion on 10.01.2015.
@@ -22,6 +22,11 @@ public class VectorFactoryImpl implements VectorFactory {
 
 	@Override
 	public Vector newInstance(double[] vector) {
+		return new VectorImpl(vector);
+	}
+
+	@Override
+	public Vector newInstance(Vector vector) {
 		return new VectorImpl(vector);
 	}
 }

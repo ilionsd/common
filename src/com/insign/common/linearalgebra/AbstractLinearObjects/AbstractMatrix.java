@@ -4,7 +4,6 @@ import com.insign.common.linearalgebra.LinearObjects.Matrix;
 import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
 import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
-import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.exceptions.IndexException;
 
 import java.util.Objects;
@@ -85,7 +84,7 @@ public abstract class AbstractMatrix implements Matrix {
 		Objects.requireNonNull(matrix, "matrix cannot be null");
 		if (getColumnsCount() != matrix.getRowsCount())
 			throw new IllegalArgumentException("Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + matrix.getRowsCount() + "x" + matrix.getColumnsCount() + " matrix");
-		MatrixImpl result = new MatrixImpl(getRowsCount(), matrix.getColumnsCount());
+		Matrix result = getMatrixFactory().newInstance(getRowsCount(), matrix.getColumnsCount());
 		for (int i = 0; i < result.getRowsCount(); i++)
 			for (int j = 0; j < result.getColumnsCount(); j++) {
 				double sum = 0;
@@ -110,11 +109,12 @@ public abstract class AbstractMatrix implements Matrix {
 		Objects.requireNonNull(vector, "matrix cannot be null");
 		if (getColumnsCount() != vector.getSize())
 			throw new IllegalArgumentException("Cannot multiply " + getRowsCount() + "x" + getColumnsCount() + " and " + vector.getSize() + " size vector");
-		Vector result = getVectorFactory().newInstance(vector.getSize());
+		Vector result = getVectorFactory().newInstance(getRowsCount());
 		for (int index = 0; index < result.getSize(); index++) {
 			double sum = 0;
 			for (int k = 0; k < vector.getSize(); k++)
 				sum += get(index, k) * vector.get(k);
+			result.set(index, sum);
 		}
 		return result;
 	}

@@ -1,6 +1,7 @@
 package com.insign.common.linearalgebra;
 
 import com.insign.common.linearalgebra.AbstractLinearObjects.AbstractMatrix;
+import com.insign.common.linearalgebra.LinearObjects.Matrix;
 import com.insign.common.linearalgebra.LinearObjects.MatrixFactory;
 import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 import com.insign.common.linearalgebra.exceptions.IndexException;
@@ -8,7 +9,7 @@ import com.insign.common.linearalgebra.exceptions.IndexException;
 /**
  * Created by ilion on 10.01.2015.
  */
-public final class MatrixImpl extends AbstractMatrix {
+public final class MatrixImpl extends AbstractMatrix implements Cloneable {
 
 	public final static MatrixFactory FACTORY = new MatrixFactoryImpl();
 
@@ -33,6 +34,22 @@ public final class MatrixImpl extends AbstractMatrix {
 		for (int row = 0; row < getRowsCount(); row++)
 			for (int column = 0; column < getColumnsCount(); column++)
 				set(row, column, matrix[row][column]);
+	}
+
+	public MatrixImpl(Matrix matrix) {
+		this.rowsCount = matrix.getRowsCount();
+		this.columnsCount = matrix.getColumnsCount();
+		array = new double[getRowsCount() * getColumnsCount()];
+		for (int i = 0; i < getRowsCount(); i++)
+			for (int j = 0; j < getColumnsCount(); j++)
+				set(i, j, matrix.get(i, j));
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		MatrixImpl clone = (MatrixImpl) super.clone();
+		clone.array = array.clone();
+		return clone;
 	}
 
 	@Override
@@ -61,7 +78,7 @@ public final class MatrixImpl extends AbstractMatrix {
 		if (isTransposed)
 			return array[rowsCount * column + row];
 		else
-			return array[rowsCount * row + column];
+			return array[columnsCount * row + column];
 	}
 
 	@Override
@@ -72,7 +89,7 @@ public final class MatrixImpl extends AbstractMatrix {
 		if (isTransposed)
 			array[rowsCount * column + row] = value;
 		else
-			array[rowsCount * row + column] = value;
+			array[columnsCount * row + column] = value;
 	}
 
 	@Override

@@ -30,6 +30,18 @@ public abstract class AbstractVector implements Vector {
 	public abstract boolean isTransposed();
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Vector)
+			return equals((Vector) obj, 1e-12);
+		else return false;
+	}
+
+	@Override
+	public boolean equals(Vector vector, double epsilon) {
+		return Vector.Math.norm(this.negate().add(vector)) < epsilon;
+	}
+
+	@Override
 	public Vector add(Vector vector) {
 		Objects.requireNonNull(vector, "Vector cannot be null");
 		if (getSize() != vector.getSize())
@@ -37,6 +49,14 @@ public abstract class AbstractVector implements Vector {
 		Vector result = getVectorFactory().newInstance(getSize());
 		for (int index = 0; index < result.getSize(); index++)
 			result.set(index, get(index) + vector.get(index));
+		return result;
+	}
+
+	@Override
+	public Vector negate() {
+		Vector result = getVectorFactory().newInstance(getSize());
+		for (int k = 0; k < result.getSize(); k++)
+			result.set(k, -get(k));
 		return result;
 	}
 
@@ -62,13 +82,17 @@ public abstract class AbstractVector implements Vector {
 		if (getColumnsCount() != vector.getRowsCount())
 			throw new IllegalArgumentException("Cannot multiply vectors " + getRowsCount() + "x" + getColumnsCount() + " and " + vector.getRowsCount() + "x" + vector.getColumnsCount());
 		Matrix result = getMatrixFactory().newInstance(getRowsCount(), vector.getColumnsCount());
-		for (int i = 0; i < result.getRowsCount(); i++)
-			for (int j = 0; j < result.getColumnsCount(); j++) {
-				double sum = 0;
-				for (int k = 0; k < getColumnsCount(); k++)
-					sum += get(k) * vector.get(k);
-				result.set(i, j, sum);
-			}
+
+		if (result.getRowsCount() == 1 && result.getColumnsCount() == 1) {
+			double sum = 0;
+			for (int k = 0; k < getColumnsCount(); k++)
+				sum += get(k) * vector.get(k);
+			result.set(0, 0, sum);
+		} else {
+			for (int i = 0; i < result.getRowsCount(); i++)
+				for (int j = 0; j < result.getColumnsCount(); j++)
+					result.set(i, j, get(i) * vector.get(j));
+		}
 		return result;
 	}
 
@@ -87,7 +111,7 @@ public abstract class AbstractVector implements Vector {
 		for (int k = 0; k < getSize(); k++) {
 			sb.append(get(k));
 			if (k != getSize() - 1)
-				sb.append(" ;");
+				sb.append("; ");
 		}
 		sb.append(">");
 		if (isTransposed())

@@ -12,7 +12,11 @@ public interface Vector extends LinearObject {
 
 	int getSize();
 
+	boolean equals(Vector vector, double epsilon);
+
 	Vector add(Vector vector);
+
+	Vector negate();
 
 	Vector multiply(Matrix matrix);
 
@@ -27,7 +31,7 @@ public interface Vector extends LinearObject {
 	VectorFactory getFactory();
 
 	public static class Math {
-		static double scalarProduct(Vector vector1, Vector vector2) {
+		public static double scalarProduct(Vector vector1, Vector vector2) {
 			Objects.requireNonNull(vector1, "Operand can not be null");
 			Objects.requireNonNull(vector2, "Operand can not be null");
 			if (vector1.getSize() != vector2.getSize())
@@ -38,12 +42,12 @@ public interface Vector extends LinearObject {
 			return result;
 		}
 
-		static double norm(Vector vector) {
+		public static double norm(Vector vector) {
 			Objects.requireNonNull(vector, "Operand can not be null");
 			double result = 0;
 			for (int k = 0; k < vector.getSize(); k++)
 				result += vector.get(k) * vector.get(k);
-			return result;
+			return java.lang.Math.sqrt(result);
 		}
 	}
 }
