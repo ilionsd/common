@@ -9,4 +9,8 @@ public interface MatrixFactory extends LinearObjectFactory {
 	Matrix newInstance(double[][] matrix);
 
 	Matrix newInstance(Matrix matrix);
+
+	Matrix E(int n);
+
+	Matrix diag(double[] array);
 }

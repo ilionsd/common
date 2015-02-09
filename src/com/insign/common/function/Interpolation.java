@@ -14,21 +14,24 @@ public class Interpolation {
 	private Interpolation() {
 	}
 
-	public CubeSpline SmoothingSpline(Point2D[] points, double lambda) {
-		double[] h = new double[points.length - 1];
-		for (int k = 0; k < h.length; k++)
+	public static CubeSpline SmoothingSpline(Point2D[] points, double lambda) {
+		//-- x indexes changes from 0 to n  --
+		int n = points.length - 1;
+		int nh = n - 1;
+		double[] h = new double[nh + 1];
+		for (int k = 0; k <= nh; k++)
 			h[k] = points[k + 1].getX() - points[k].getX();
-		int Rsize = points.length - 1;
-		Matrix R = MatrixImpl.FACTORY.newInstance(Rsize, Rsize);
+		int nR = n - 1;
+		Matrix R = MatrixImpl.FACTORY.newInstance(nR + 1, nR + 1);
 		R.set(0, 0, 2 * (h[0] + h[1]));
 		R.set(0, 1, h[1]);
-		for (int i = 1; i < R.getRowsCount() - 1; i++) {
+		for (int i = 1; i <= nR - 1; i++) {
 			R.set(i, i - 1, h[i]);
 			R.set(i, i, 2 * (h[i] + h[i + 1]));
 			R.set(i, i + 1, h[i + 1]);
 		}
-		R.set(Rsize - 1, Rsize - 2, h[Rsize - 1]);
-		R.set(Rsize - 1, Rsize - 1, 2 * (h[Rsize - 1] + h[Rsize]));
+		R.set(nR, nR - 1, h[nR - 1]);
+		R.set(nR, nR, 2 * (h[nR - 1] + h[nR]));
 
 		int QtsizeRow = points.length - 1;
 		int QtsizeCol = points.length + 1;
