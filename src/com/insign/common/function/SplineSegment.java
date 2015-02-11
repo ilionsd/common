@@ -1,20 +1,29 @@
 package com.insign.common.function;
 
+import java.util.Arrays;
+
 /**
  * Created by ilion on 05.02.2015.
  */
 public class SplineSegment {
-	int power;
+	private int power;
 
-	double[] coefficients;
+	private double[] coefficients;
 
-	double leftBound, rightBound;
+	private double leftBound, rightBound;
 
 	public SplineSegment(int power, double leftBound, double rightBound) {
 		this.power = power;
 		this.leftBound = leftBound;
 		this.rightBound = rightBound;
 		coefficients = new double[getPower() + 1];
+	}
+
+	public SplineSegment(double[] coefficients, double leftBound, double rightBound) {
+		power = coefficients.length;
+		this.coefficients = Arrays.copyOf(coefficients, coefficients.length);
+		this.leftBound = leftBound;
+		this.rightBound = rightBound;
 	}
 
 	public void set(int k, double value) {
@@ -34,7 +43,7 @@ public class SplineSegment {
 	}
 
 	public double valueIn(double x) {
-		if (x < leftBound || x > rightBound)
+		if (!isIn(x))
 			throw new IllegalArgumentException("x should belong to the segment [" + leftBound + "; " + rightBound + "]");
 		double xPow = 1;
 		double xMul = x - leftBound;
@@ -44,5 +53,17 @@ public class SplineSegment {
 			xPow *= xMul;
 		}
 		return result;
+	}
+
+	public double getLeftBound() {
+		return leftBound;
+	}
+
+	public double getRightBound() {
+		return rightBound;
+	}
+
+	public boolean isIn(double x) {
+		return (x + Double.MIN_VALUE > getLeftBound() && x - Double.MIN_VALUE < getRightBound());
 	}
 }

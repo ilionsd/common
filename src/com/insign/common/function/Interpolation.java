@@ -14,7 +14,7 @@ public class Interpolation {
 	private Interpolation() {
 	}
 
-	public static CubeSpline SmoothingSpline(Point2D[] points, double lambda) {
+	public static Spline SmoothingSpline(Point2D[] points, double lambda) {
 		//-- x indexes changes from 0 to n  --
 		int n = points.length - 1;
 		//-- h indexes changes from 0 to n-1 --
@@ -76,6 +76,17 @@ public class Interpolation {
 
 		Vector d = y.add(Sigma.multiply(Q).multiply(b).negate());
 
-		return null;
+		double[] coefficients = new double[] {(bExt.get(1) - bExt.get(0)) / (3.0 * h[0]), bExt.get(0), (d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) - 2.0 * bExt.get(0)) * h[0], d.get(0)};
+		Spline spline = new Spline(coefficients, points[0].getX(), points[1].getX());
+
+		for (int k = 1; k <= n - 1; k++) {
+			coefficients[0] = (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
+			coefficients[1] = bExt.get(k);
+			coefficients[2] = (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) - 2.0 * bExt.get(k)) * h[k];
+			coefficients[3] = d.get(k);
+			spline.addRight(coefficients, points[k + 1].getX());
+		}
+
+		return spline;
 	}
 }
