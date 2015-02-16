@@ -43,8 +43,6 @@ public class SplineSegment {
 	}
 
 	public double valueIn(double x) {
-		if (!isIn(x))
-			throw new IllegalArgumentException("x should belong to the segment [" + leftBound + "; " + rightBound + "]");
 		double xPow = 1;
 		double xMul = x - leftBound;
 		double result = 0;
