@@ -39,7 +39,7 @@ public class SplineSegment {
 	}
 
 	public int getPower() {
-		return power;
+		return power - 1;
 	}
 
 	public double valueIn(double x) {
@@ -62,6 +62,8 @@ public class SplineSegment {
 	}
 
 	public boolean isIn(double x) {
-		return (x + Double.MIN_VALUE > getLeftBound() && x - Double.MIN_VALUE < getRightBound());
+		int cmpLeft = Double.compare(getLeftBound(), x);
+		int cmpRight = Double.compare(x, getRightBound());
+		return (cmpLeft <= 0) && (cmpRight <= 0);
 	}
 }

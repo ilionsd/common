@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Spline implements Function {
 
-	List<SplineSegment> splineList;
+	private List<SplineSegment> splineList;
 
 	public Spline(double[] coefficients, double leftBound, double rightBound) {
 		splineList = new ArrayList<SplineSegment>();
@@ -18,7 +18,7 @@ public class Spline implements Function {
 	@Override
 	public double valueIn(double x) {
 		int left = 0;
-		int right = splineList.size();
+		int right = splineList.size() - 1;
 		int middle = 0;
 		double value = 0;
 
@@ -26,7 +26,14 @@ public class Spline implements Function {
 			value = splineList.get(0).valueIn(x);
 		else if (x > getRightBound())
 			value = splineList.get(splineList.size() - 1).valueIn(x);
-		else do {
+		else
+			for (int k = 0; k < splineList.size(); k++)
+				if (splineList.get(k).isIn(x)) {
+					value = splineList.get(k).valueIn(x);
+					break;
+				}
+		//-- Binary search commented because sometimes failing search and value variable stay with initial value --
+/*			do {
 				middle = left + (right - left) / 2;
 				if (splineList.get(middle).isIn(x)) {
 					value = splineList.get(middle).valueIn(x);
@@ -35,7 +42,7 @@ public class Spline implements Function {
 					right = middle - 1;
 				else
 					left = middle + 1;
-			} while (left < right);
+			} while (left <= right);*/
 
 		return value;
 	}
@@ -64,8 +71,14 @@ public class Spline implements Function {
 		return splineList.get(splineList.size() - 1).getRightBound();
 	}
 
-
-
-
-
+	public static boolean isContinuous(Spline spline, double eps) {
+		for (int k = 0; k < spline.splineList.size() - 1; k++) {
+			double bound = spline.splineList.get(k).getRightBound();
+			double valueLeft = spline.splineList.get(k).valueIn(bound);
+			double valueRight = spline.splineList.get(k + 1).valueIn(bound);
+			if (Math.abs(valueRight - valueLeft) > eps)
+				return false;
+		}
+		return true;
+	}
 }

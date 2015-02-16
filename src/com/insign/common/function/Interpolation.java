@@ -55,6 +55,7 @@ public class Interpolation {
 
 		int nSigma = n;
 		Matrix Sigma = MatrixImpl.FACTORY.E(nSigma + 1);
+		double sigma = Math.sqrt(1.0 / 12.0);
 
 		Vector y = VectorImpl.FACTORY.newInstance(n + 1);
 		for (int k = 0; k < y.getSize(); k++)
@@ -62,7 +63,9 @@ public class Interpolation {
 
 		double mu = (2.0 / 3.0) * (1 - lambda) / lambda;
 
-		Matrix A = Qt.multiply(Sigma).multiply(Q).multiply(mu).add(R);
+		double coeff = mu * sigma;
+
+		Matrix A = Qt.multiply(Sigma).multiply(Q).multiply(coeff).add(R);
 
 		Vector B = Qt.multiply(y);
 
@@ -74,19 +77,20 @@ public class Interpolation {
 		for (int k = 0; k < b.getSize(); k++)
 			bExt.set(k + 1, b.get(k));
 
-		Vector d = y.add(Sigma.multiply(Q).multiply(b).negate());
+		Vector d = y.add(Sigma.multiply(Q).multiply(b).multiply(coeff).negate());
 
-		double[] coefficients = new double[] {(bExt.get(1) - bExt.get(0)) / (3.0 * h[0]), bExt.get(0), (d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) - 2.0 * bExt.get(0)) * h[0], d.get(0)};
+		double[] coefficients = new double[] {d.get(0), (d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) - 2.0 * bExt.get(0)) * h[0], bExt.get(0), (bExt.get(1) - bExt.get(0)) / (3.0 * h[0])};
 		Spline spline = new Spline(coefficients, points[0].getX(), points[1].getX());
 
 		for (int k = 1; k <= n - 1; k++) {
-			coefficients[0] = (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
-			coefficients[1] = bExt.get(k);
-			coefficients[2] = (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) - 2.0 * bExt.get(k)) * h[k];
-			coefficients[3] = d.get(k);
+			coefficients[0] = d.get(k);
+			coefficients[1] = (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) - 2.0 * bExt.get(k)) * h[k];
+			coefficients[2] = bExt.get(k);
+			coefficients[3] = (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
 			spline.addRight(coefficients, points[k + 1].getX());
 		}
 
 		return spline;
 	}
+
 }
