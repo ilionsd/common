@@ -6,6 +6,8 @@ import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.VectorImpl;
 import com.insign.common.linearalgebra.solve.LAES;
 
+import java.util.function.IntFunction;
+
 
 /**
  * Created by ilion on 04.02.2015.
@@ -25,15 +27,15 @@ public class Interpolation {
 		//-- R indexes changes from 0 to n-2 and from 0 to n-2 --
 		int nR = n - 2;
 		Matrix R = MatrixImpl.FACTORY.newInstance(nR + 1, nR + 1);
-		R.set(0, 0, 2 * (h[0] + h[1]));
+		R.set(0, 0, 2.0 * (h[0] + h[1]));
 		R.set(0, 1, h[1]);
 		for (int i = 1; i <= nR - 1; i++) {
 			R.set(i, i - 1, h[i]);
-			R.set(i, i, 2 * (h[i] + h[i + 1]));
+			R.set(i, i, 2.0 * (h[i] + h[i + 1]));
 			R.set(i, i + 1, h[i + 1]);
 		}
 		R.set(nR, nR - 1, h[nR]);
-		R.set(nR, nR, 2 * (h[nR] + h[nR + 1]));
+		R.set(nR, nR, 2.0 * (h[nR] + h[nR + 1]));
 
 		//-- Qt indexes changes from 0 to n-2 and from 0 to n --
 		int nQtRow = n - 2;
@@ -61,7 +63,7 @@ public class Interpolation {
 		for (int k = 0; k < y.getSize(); k++)
 			y.set(k, points[k].getY());
 
-		double mu = (2.0 / 3.0) * (1 - lambda) / lambda;
+		double mu = (2.0 / 3.0) * (1.0 - lambda) / lambda;
 
 		double coeff = mu * sigma;
 
@@ -73,20 +75,23 @@ public class Interpolation {
 
 		Vector bExt = VectorImpl.FACTORY.newInstance(b.getSize() + 2);
 		bExt.set(0, 0);
-		bExt.set(b.getSize() - 1, 0);
+		bExt.set(bExt.getSize() - 1, 0);
 		for (int k = 0; k < b.getSize(); k++)
 			bExt.set(k + 1, b.get(k));
 
 		Vector d = y.add(Sigma.multiply(Q).multiply(b).multiply(coeff).negate());
 
-		double[] coefficients = new double[] {d.get(0), (d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) - 2.0 * bExt.get(0)) * h[0], bExt.get(0), (bExt.get(1) - bExt.get(0)) / (3.0 * h[0])};
+		IntFunction<Double> a = (k) -> (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
+		IntFunction<Double> c = (k) -> (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) + 2.0 * bExt.get(k)) * h[k];
+
+		double[] coefficients = new double[] {d.get(0), c.apply(0), bExt.get(0), a.apply(0)};
 		Spline spline = new Spline(coefficients, points[0].getX(), points[1].getX());
 
 		for (int k = 1; k <= n - 1; k++) {
 			coefficients[0] = d.get(k);
-			coefficients[1] = (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) - 2.0 * bExt.get(k)) * h[k];
+			coefficients[1] = c.apply(k);
 			coefficients[2] = bExt.get(k);
-			coefficients[3] = (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
+			coefficients[3] = a.apply(k);
 			spline.addRight(coefficients, points[k + 1].getX());
 		}
 

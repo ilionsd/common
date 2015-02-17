@@ -36,7 +36,7 @@ public class Point2D {
 
 	public boolean equals(Point2D point) {
 		Objects.requireNonNull(point);
-		if (Math.abs(getX() - point.getX()) < Double.MIN_VALUE && Math.abs(getY() - point.getY()) < Double.MIN_VALUE)
+		if (Double.compare(getX(), point.getX()) == 0 && Double.compare(getY(), point.getY()) == 0)
 			return true;
 		else return false;
 	}
@@ -46,5 +46,10 @@ public class Point2D {
 		if (obj instanceof Point2D)
 			return equals((Point2D) obj);
 		else return false;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + getX() + ";" + getY() + ")";
 	}
 }
