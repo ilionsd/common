@@ -6,8 +6,6 @@ import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.VectorImpl;
 import com.insign.common.linearalgebra.solve.LAES;
 
-import java.util.function.IntFunction;
-
 
 /**
  * Created by ilion on 04.02.2015.
@@ -81,17 +79,18 @@ public class Interpolation {
 
 		Vector d = y.add(Sigma.multiply(Q).multiply(b).multiply(coeff).negate());
 
-		IntFunction<Double> a = (k) -> (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
-		IntFunction<Double> c = (k) -> (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) + 2.0 * bExt.get(k)) * h[k];
-
-		double[] coefficients = new double[] {d.get(0), c.apply(0), bExt.get(0), a.apply(0)};
+		double[] coefficients = new double[] {
+				d.get(0),
+				(d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) + 2.0 * bExt.get(0)) * h[0],
+				bExt.get(0),
+				(bExt.get(1) - bExt.get(0)) / (3.0 * h[0])};
 		Spline spline = new Spline(coefficients, points[0].getX(), points[1].getX());
 
 		for (int k = 1; k <= n - 1; k++) {
 			coefficients[0] = d.get(k);
-			coefficients[1] = c.apply(k);
+			coefficients[1] = (d.get(k + 1) - d.get(k)) / h[k] - (1.0 / 3.0) * (bExt.get(k + 1) + 2.0 * bExt.get(k)) * h[k];
 			coefficients[2] = bExt.get(k);
-			coefficients[3] = a.apply(k);
+			coefficients[3] = (bExt.get(k + 1) - bExt.get(k)) / (3.0 * h[k]);
 			spline.addRight(coefficients, points[k + 1].getX());
 		}
 
