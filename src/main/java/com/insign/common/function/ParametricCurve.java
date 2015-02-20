@@ -21,7 +21,6 @@ public class ParametricCurve {
 	}
 
 	public Spline naturalParametrization(double step) {
-		//ArrayList<Point2D> xy = new ArrayList<Point2D>();
 		Point2D xyPrev = null,
 				xy = null,
 				xyHalfStep = null;

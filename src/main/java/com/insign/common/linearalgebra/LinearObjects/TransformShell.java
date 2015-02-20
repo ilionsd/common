@@ -1,7 +1,5 @@
 package com.insign.common.linearalgebra.LinearObjects;
 
-import java.util.Objects;
-
 /**
  * Created by ilion on 25.01.2015.
  */
