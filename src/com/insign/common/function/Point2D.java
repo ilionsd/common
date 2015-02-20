@@ -50,6 +50,35 @@ public class Point2D {
 
 	@Override
 	public String toString() {
-		return "(" + getX() + ";" + getY() + ")";
+		return "(" + getX() + "; " + getY() + ")";
+	}
+
+	public static double distance(Point2D point1, Point2D point2) {
+		Objects.requireNonNull(point1);
+		Objects.requireNonNull(point2);
+		double deltaX = point1.getX() - point2.getX();
+		double deltaY = point1.getY() - point2.getY();
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
