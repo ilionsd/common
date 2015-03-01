@@ -6,45 +6,61 @@ import java.util.List;
 /**
  * Created by ilion on 04.02.2015.
  */
-public class Spline implements Function {
+public class Spline implements Function<Double, Double>, Reparameterizable<Spline> {
 
-	private List<SplineSegment> splineList;
+	private List<SplineSegment> splineList = new ArrayList<SplineSegment>();
 
 	public Spline(double[] coefficients, double leftBound, double rightBound) {
-		splineList = new ArrayList<SplineSegment>();
 		splineList.add(new SplineSegment(coefficients, leftBound, rightBound));
 	}
 
-	@Override
-	public double valueIn(double x) {
-		int left = 0;
-		int right = splineList.size() - 1;
-		int middle = 0;
-		double value = 0;
+	public Spline(SplineSegment splineSegment) {
+		splineList.add(new SplineSegment(splineSegment));
+	}
 
+	public Spline(Spline spline) {
+		for (SplineSegment ss : spline.splineList) {
+			splineList.add(new SplineSegment(ss));
+		}
+	}
+
+	private int getSegment(final double x) {
+		int segmentIndex = -1;
 		if (x < getLeftBound())
-			value = splineList.get(0).valueIn(x);
+			segmentIndex = 0;
 		else if (x > getRightBound())
-			value = splineList.get(splineList.size() - 1).valueIn(x);
-		else
+			segmentIndex = splineList.size() - 1;
+		else {
+		/*
 			for (int k = 0; k < splineList.size(); k++)
 				if (splineList.get(k).isIn(x)) {
-					value = splineList.get(k).valueIn(x);
-					break;
+					segmentIndex = k;
 				}
-		//-- Binary search commented because sometimes failing search and value variable stay with initial value --
-/*			do {
+		*/
+			int middle;
+			int left = 0, right = splineList.size() - 1;
+			//-- Binary search commented because sometimes failing search and value variable stay with initial value --
+			do {
 				middle = left + (right - left) / 2;
 				if (splineList.get(middle).isIn(x)) {
-					value = splineList.get(middle).valueIn(x);
-					break;
+					segmentIndex =  middle;
 				} else if (splineList.get(middle).getLeftBound() > x)
 					right = middle - 1;
 				else
 					left = middle + 1;
-			} while (left <= right);*/
+			} while (left <= right);
+		}
+		return segmentIndex;
+	}
 
-		return value;
+	@Override
+	public Double valueIn(final Double x) {
+		return splineList.get(getSegment(x)).valueIn(x);
+	}
+
+	@Override
+	public Double derivative(final int order, final Double x) {
+		return splineList.get(getSegment(x)).derivative(order, x);
 	}
 
 	public Spline addRight(double[] coefficients, double rightBound) {
@@ -52,6 +68,13 @@ public class Spline implements Function {
 		if (existRightBound > rightBound)
 			throw new RuntimeException("rightBound should be righter than exist rightBound");
 		splineList.add(new SplineSegment(coefficients, existRightBound, rightBound));
+		return this;
+	}
+
+	public Spline addRight(SplineSegment ss) {
+		if (Double.compare(getRightBound(), ss.getLeftBound()) != 0)
+			throw new IllegalArgumentException("Spline segment discontinue spline");
+		splineList.add(new SplineSegment(ss));
 		return this;
 	}
 
@@ -63,12 +86,35 @@ public class Spline implements Function {
 		return this;
 	}
 
+	public Spline addLeft(SplineSegment ss) {
+		if (Double.compare(ss.getRightBound(), getLeftBound()) != 0)
+			throw new IllegalArgumentException("Spline segment discontinue spline");
+		splineList.add(0, new SplineSegment(ss));
+		return this;
+	}
+
 	public double getLeftBound() {
 		return splineList.get(0).getLeftBound();
 	}
 
 	public double getRightBound() {
 		return splineList.get(splineList.size() - 1).getRightBound();
+	}
+
+	public double[] getKnots() {
+		double[] knots = new double[splineList.size() + 1];
+		for (int k = 0; k < splineList.size(); k++)
+			knots[k] = splineList.get(k).getLeftBound();
+		knots[knots.length - 1] = getRightBound();
+		return knots;
+	}
+
+	public Point2D[] getPoints() {
+		Point2D[] points = new Point2D[splineList.size() + 1];
+		for (int k = 0; k < splineList.size(); k++)
+			points[k] = new Point2D(splineList.get(k).getLeftBound(), valueIn(splineList.get(k).getLeftBound()));
+		points[points.length - 1] = new Point2D(getRightBound(), valueIn(getRightBound()));
+		return points;
 	}
 
 	public static boolean isContinuous(Spline spline, double eps) {
@@ -80,5 +126,23 @@ public class Spline implements Function {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Spline reparameterize(final Spline spline) {
+		double[] selfKnots = getKnots();
+		double[] otherKnots = spline.getKnots();
+		double[] overallKnots = com.insign.common.ArrayUtils.union(selfKnots, otherKnots);
+		ArrayList<SplineSegment> ssList = new ArrayList<SplineSegment>();
+		for (int k = 1; k < overallKnots.length; k++) {
+			double middle = (overallKnots[k - 1] + overallKnots[k]) / 2.0;
+			int selfIndex = getSegment(middle);
+			int otherIndex = spline.getSegment(middle);
+			ssList.add(splineList.get(selfIndex).reparameterize(spline.splineList.get(otherIndex)));
+		}
+		Spline reparametrized = new Spline(ssList.get(0));
+		for (SplineSegment ss : ssList)
+			reparametrized.addRight(ss);
+		return reparametrized;
 	}
 }

@@ -6,6 +6,8 @@ import java.util.Objects;
  * Created by ilion on 09.02.2015.
  */
 public class Point2D {
+	public static Point2D ORIGIN = new Point2D(0, 0);
+
 	double x, y;
 
 	public Point2D() {
@@ -59,6 +61,11 @@ public class Point2D {
 		double deltaX = point1.getX() - point2.getX();
 		double deltaY = point1.getY() - point2.getY();
 		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+	}
+
+	public static double module(Point2D point) {
+		Objects.requireNonNull(point);
+		return Math.sqrt(point.getX() * point.getX() + point.getY() * point.getY());
 	}
 }
 

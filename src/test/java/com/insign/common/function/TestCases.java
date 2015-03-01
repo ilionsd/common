@@ -30,7 +30,7 @@ public class TestCases {
 				new Point2D(1075.0, 489.3707275390625),
 				new Point2D(1206.0, 553.2316284179688)};
 
-		Spline spline = Interpolation.SmoothingSpline(arr, 0.5);
+		Spline spline = Interpolation.Splines.Smoothing(arr, 0.5);
 
 		Assert.assertTrue(Spline.isContinuous(spline, 1e-10));
 	}
@@ -49,7 +49,7 @@ public class TestCases {
 				new Point2D(0.8, 1.073),
 				new Point2D(0.9, 0.991)};
 
-		Spline spline = Interpolation.SmoothingSpline(arr, 1);
+		Spline spline = Interpolation.Splines.Smoothing(arr, 1);
 
 		Assert.assertTrue(Spline.isContinuous(spline, 1e-10));
 	}
