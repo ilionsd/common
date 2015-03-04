@@ -258,4 +258,18 @@ public class Tests {
 		Assert.assertTrue(x.equals(xActual, 1e-3));
 	}
 
+	@Test
+	public void matrixFactory2Test() {
+		Matrix matrix = null;
+		matrix = MatrixFactory2.getMatrix(MatrixImpl.class, 2, 4);
+		Matrix matrix2 = matrix.clone();
+	}
+
+	@Test
+	public void vectorFactory2Test() {
+		Vector vector = null;
+		vector = VectorFactory2.getVector(VectorFactory2.DEFAULT_VECTOR_CLASS, 7);
+		Vector vector2 = vector.clone();
+	}
+
 }

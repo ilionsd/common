@@ -1,7 +1,10 @@
 package com.insign.common;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by ilion on 28.02.2015.
@@ -63,4 +66,30 @@ public class ArrayUtils {
 			united[k++] = e;
 		return united;
 	}
+
+	/*
+	public static Object[] toTypes(Object[] data, Class[] destTypes) {
+		if (data == null)
+			return null;
+		if (destTypes == null)
+			return data.clone();
+		if (data.length != destTypes.length)
+			throw new IllegalArgumentException("Length of data and destTypes should be same");
+		Object[] destData = new Object[data.length];
+		for (int k = 0; k < data.length; k++) {
+			Class dataType = data[k].getClass();
+			if (ClassUtils.isAssignable(dataType, destTypes[k], true))
+				if (dataType.isPrimitive() || destTypes[k].isPrimitive()) {
+					Object item = destTypes[k].newInstance();
+					destData[k] = data[k];
+				}
+				else
+					destData[k] = destTypes[k].cast(data[k]);
+			else
+				throw new IllegalArgumentException("Element " + k + " of type " + dataType + " can not be cast to " + destTypes[k]);
+		}
+		return destData;
+	}
+	*/
+
 }

@@ -124,7 +124,7 @@ public interface Interpolation {
 	}
 
 	public static class ParametricCurves {
-		public static AbstractParametricCurve bySmoothingSpline(final LinkedHashMap<Double, Point2D> points, final double lambda) {
+		public static SplineParametricCurve bySmoothingSpline(final LinkedHashMap<Double, Point2D> points, final double lambda) {
 
 			Point2D[] xtPoints = new Point2D[points.size()],
 					ytPoints = new Point2D[points.size()];

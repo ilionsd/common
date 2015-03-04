@@ -9,7 +9,7 @@ import com.insign.common.linearalgebra.exceptions.IndexException;
 /**
  * Created by ilion on 10.01.2015.
  */
-public final class MatrixImpl extends AbstractMatrix implements Cloneable {
+public final class MatrixImpl extends AbstractMatrix {
 
 	public final static MatrixFactory FACTORY = new MatrixFactoryImpl();
 
@@ -46,7 +46,7 @@ public final class MatrixImpl extends AbstractMatrix implements Cloneable {
 	}
 
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public MatrixImpl clone() {
 		MatrixImpl clone = (MatrixImpl) super.clone();
 		clone.array = array.clone();
 		return clone;

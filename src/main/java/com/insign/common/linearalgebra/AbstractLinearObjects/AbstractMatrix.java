@@ -30,6 +30,18 @@ public abstract class AbstractMatrix implements Matrix {
 	public abstract boolean isTransposed();
 
 	@Override
+	public AbstractMatrix clone() {
+		AbstractMatrix clone = null;
+		try {
+			clone = (AbstractMatrix) super.clone();
+		} catch (CloneNotSupportedException e) {
+			//-- Clone supports - should never happen --
+			e.printStackTrace();
+		}
+		return clone;
+	}
+
+	@Override
 	public Vector getRow(int row) {
 		if (row < 0 || row >= getRowsCount())
 			throw new IndexException(row, 0, getRowsCount(), getColumnsCount());

@@ -30,6 +30,18 @@ public abstract class AbstractVector implements Vector {
 	public abstract boolean isTransposed();
 
 	@Override
+	public AbstractVector clone() {
+		AbstractVector clone = null;
+		try {
+			clone = (AbstractVector) super.clone();
+		} catch (CloneNotSupportedException e) {
+			//-- Clone supports - should never happen --
+			e.printStackTrace();
+		}
+		return clone;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Vector)
 			return equals((Vector) obj, 1e-12);

@@ -9,7 +9,7 @@ import com.insign.common.linearalgebra.LinearObjects.VectorFactory;
 /**
  * Created by ilion on 05.01.2015.
  */
-public final class VectorImpl extends AbstractVector implements Cloneable {
+public final class VectorImpl extends AbstractVector {
 	public static final VectorFactory FACTORY = new VectorFactoryImpl();
 
 	double[] array;
@@ -36,6 +36,13 @@ public final class VectorImpl extends AbstractVector implements Cloneable {
 		isTransposed = vector.getRowsCount() == 1;
 		for (int k = 0; k < getSize(); k++)
 			set(k, vector.get(k));
+	}
+
+	@Override
+	public VectorImpl clone() {
+		VectorImpl clone = (VectorImpl) super.clone();
+		clone.array = array.clone();
+		return clone;
 	}
 
 	@Override

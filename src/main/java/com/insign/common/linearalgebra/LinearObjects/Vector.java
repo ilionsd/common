@@ -30,6 +30,9 @@ public interface Vector extends LinearObject {
 	@Override
 	VectorFactory getFactory();
 
+	@Override
+	Vector clone();
+
 	public static class Math {
 		public static double scalarProduct(Vector vector1, Vector vector2) {
 			Objects.requireNonNull(vector1, "Operand can not be null");

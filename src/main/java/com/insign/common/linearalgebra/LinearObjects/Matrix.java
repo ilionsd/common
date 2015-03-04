@@ -21,6 +21,9 @@ public interface Matrix extends MatrixBase {
 	@Override
 	MatrixFactory getFactory();
 
+	@Override
+	Matrix clone();
+
 	public static class ETransform {
 		public static void swapRows(Matrix matrix, int row1, int row2) {
 			Objects.requireNonNull(matrix, "Matrix cannot be null");
