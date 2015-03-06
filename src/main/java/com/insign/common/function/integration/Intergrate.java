@@ -1,9 +1,6 @@
-package com.insign.common.integration;
+package com.insign.common.function.integration;
 
 import com.insign.common.function.Arrow;
-import com.insign.common.function.Function;
-
-import java.util.ArrayList;
 
 /**
  * Created by ilion on 26.02.2015.
@@ -19,6 +16,7 @@ public final class Intergrate {
 
 		private static final Knot[][] KNOTS = new Knot[][] {
 				new Knot[0],
+				//-- Exact knot coordinates --
 				new Knot[] {new Knot(0, 2)},
 				new Knot[] {
 						new Knot(-Math.sqrt(1.0 / 3.0), 1),
@@ -42,6 +40,8 @@ public final class Intergrate {
 						new Knot(-1.0 / 3.0 * Math.sqrt(5.0 + 2.0 * Math.sqrt(10.0 / 7.0)), (322.0 - 13.0 * Math.sqrt(70.0)) / 900.0),
 						new Knot( 1.0 / 3.0 * Math.sqrt(5.0 + 2.0 * Math.sqrt(10.0 / 7.0)), (322.0 - 13.0 * Math.sqrt(70.0)) / 900.0)
 				}
+				//-- Numeric knot coordinates --
+				//-- ... --
 		};
 
 		private static class LinearVariableReplacement implements Arrow<Double, Double> {
@@ -68,8 +68,9 @@ public final class Intergrate {
 			return integral;
 		}
 
-		public static double twoPointRule(final Integral integral, final double precision) {
-			final int knotsIndex = 2;
+		public static double integrate(final int pointCountRule, final Integral integral, final double precision) {
+			if (pointCountRule < 1 || pointCountRule > KNOTS.length - 1)
+				throw new IllegalArgumentException("pointCountRule should be more or equals 1 and less or equals " + (KNOTS.length - 1));
 			double integralValue = -precision * 2, integralPrevValue = 0;
 			int intervalCount = DEFAULT_INTERVAL_COUNT;
 			final double integrationInterval = integral.getUpperLimit() - integral.getLowerLimit();
@@ -88,11 +89,21 @@ public final class Intergrate {
 							return integral.getArrow().valueIn(variableReplacement.valueIn(x));
 						}
 					};
-					integralValue += variableReplacement.integralCorrectionCoefficient() * integrate(KNOTS[knotsIndex], integratedArrow);
+					integralValue += variableReplacement.integralCorrectionCoefficient() * integrate(KNOTS[pointCountRule], integratedArrow);
 				}
 				intervalCount *= INTERGAL_STEP_MULTIPLIER;
 			}
 			return (integralValue + integralPrevValue) / 2.0;
+		}
+
+		public static double twoPointRule(final Integral integral, final double precision) {
+			final int knotsIndex = 2;
+			return integrate(knotsIndex, integral, precision);
+		}
+
+		public static double fivePointRule(final Integral integral, final double precision) {
+			final int knotsIndex = 5;
+			return integrate(knotsIndex, integral, precision);
 		}
 	}
 

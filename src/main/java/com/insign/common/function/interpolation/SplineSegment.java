@@ -1,11 +1,14 @@
-package com.insign.common.function;
+package com.insign.common.function.interpolation;
+
+import com.insign.common.function.Function;
+import com.insign.common.function.Reparameterizable;
 
 import java.util.Arrays;
 
 /**
  * Created by ilion on 05.02.2015.
  */
-public class SplineSegment implements Function<Double, Double>, Reparameterizable<SplineSegment> {
+public class SplineSegment implements Function<Double, Double>, Reparameterizable<SplineSegment>, Cloneable {
 	private int power;
 
 	private double[] coefficients;
@@ -24,6 +27,18 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 		this.coefficients = Arrays.copyOf(coefficients, coefficients.length);
 		this.leftBound = leftBound;
 		this.rightBound = rightBound;
+	}
+
+	@Override
+	public SplineSegment clone() {
+		SplineSegment clone = null;
+		try {
+			clone = (SplineSegment) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		clone.coefficients = coefficients.clone();
+		return clone;
 	}
 
 	public SplineSegment(SplineSegment splineSegment) {
@@ -74,7 +89,7 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 		long fact = 1;
 		if (k > n)
 			return 1;
-		for (long l = n - k + 1; k <= n; k++) {
+		for (long l = n - k + 1; l <= n; l++) {
 			fact *= l;
 		}
 		return fact;
@@ -86,6 +101,14 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 
 	public double getRightBound() {
 		return rightBound;
+	}
+
+	public void setLeftBound(double leftBound) {
+		this.leftBound = leftBound;
+	}
+
+	public void setRightBound(double rightBound) {
+		this.rightBound = rightBound;
 	}
 
 	public boolean isIn(double x) {
@@ -140,13 +163,14 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 			throw new IllegalArgumentException("Cannot reparameterize spline segments on unequal interval");
 		double[] result = new double[] {get(0)};
 		double[] replacement = new double[] {1};
-		int k;
+		int k = 0;
 		for (k = 1; k <= getPower(); k++) {
 			replacement = multiplySplines(replacement, splineSegment.coefficients);
 			result = addupSplines(result, multiplyScalar(replacement, get(k)));
 		}
 		k = result.length - 1;
-		while (k > 0 && Double.compare(result[k], 1e-14) < 0)
+		double delta = getRightBound() - getLeftBound();
+		while (k > 0 && Double.compare(Math.abs(result[k] * Math.pow(delta, k - 1)), 1e-3) < 0)
 			k--;
 		if (k != result.length - 1)
 			result = Arrays.copyOf(result, k + 1);
@@ -155,7 +179,8 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 	}
 
 	private static double[] multiplySplines(final double[] coefficients1, final double[] coefficients2) {
-		double[] result = new double[coefficients1.length + coefficients2.length];
+		int maxPower = (coefficients1.length - 1) + (coefficients2.length - 1);
+		double[] result = new double[maxPower + 1];
 		for (int idx1 = 0; idx1 < coefficients1.length; idx1++) {
 			for (int idx2 = 0; idx2 < coefficients2.length; idx2++) {
 				result[idx1 + idx2] += coefficients1[idx1] * coefficients2[idx2];

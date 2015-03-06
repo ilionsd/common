@@ -1,4 +1,4 @@
-package com.insign.common.integration;
+package com.insign.common.function.integration;
 
 import com.insign.common.function.Arrow;
 

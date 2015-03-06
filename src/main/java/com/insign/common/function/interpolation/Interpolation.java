@@ -1,13 +1,18 @@
-package com.insign.common.function;
+package com.insign.common.function.interpolation;
 
+import com.insign.common.Entry;
+import com.insign.common.EntryWrapper;
+import com.insign.common.function.Arrow;
+import com.insign.common.function.Point2D;
+import com.insign.common.function.differentialgeometry.SplineParametricCurve;
 import com.insign.common.linearalgebra.LinearObjects.Matrix;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
 import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.VectorImpl;
 import com.insign.common.linearalgebra.solve.LAES;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -124,12 +129,12 @@ public interface Interpolation {
 	}
 
 	public static class ParametricCurves {
-		public static SplineParametricCurve bySmoothingSpline(final LinkedHashMap<Double, Point2D> points, final double lambda) {
+		public static SplineParametricCurve bySmoothingSpline(final List<Entry<Double, Point2D>> points, final double lambda) {
 
 			Point2D[] xtPoints = new Point2D[points.size()],
 					ytPoints = new Point2D[points.size()];
 			int k = 0;
-			for (Map.Entry<Double, Point2D> entry : points.entrySet()) {
+			for (Entry<Double, Point2D> entry : points) {
 				xtPoints[k] = new Point2D(entry.getKey(), entry.getValue().getX());
 				ytPoints[k] = new Point2D(entry.getKey(), entry.getValue().getY());
 				k++;

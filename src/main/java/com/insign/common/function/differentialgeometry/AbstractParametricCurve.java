@@ -1,19 +1,29 @@
-package com.insign.common.function;
+package com.insign.common.function.differentialgeometry;
+
+import com.insign.common.function.Function;
+import com.insign.common.function.Point2D;
 
 /**
  * Created by ilion on 18.02.2015.
  */
-public abstract class AbstractParametricCurve implements Function<Double, Point2D> {
-	private final static double NATURAL_PARAMETRIZATION_STEP = 0.01;
-	private final static double NATURAL_PARAMETRIZATION_INTEGRATION_STEP = 0.01;
-	private final static int NATURAL_PARAMETRIZATION_INTERPOLATION_POINTS_COUNT = 20;
+public abstract class AbstractParametricCurve implements ParametricCurve {
 
-	protected double tMin, tMax;
-	protected Spline naturalParametrization = null;
+	private double parameterMin, parameterMax;
 
-	public AbstractParametricCurve(double tMin, double tMax) {
-		this.tMin = tMin;
-		this.tMax = tMax;
+	public AbstractParametricCurve(double parameterMin, double parameterMax) {
+		this.parameterMin = parameterMin;
+		this.parameterMax = parameterMax;
+	}
+
+	@Override
+	public AbstractParametricCurve clone() {
+		AbstractParametricCurve clone = null;
+		try {
+			clone = (AbstractParametricCurve)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
 	}
 
 	protected abstract Function<Double, Double> getX();
@@ -22,10 +32,9 @@ public abstract class AbstractParametricCurve implements Function<Double, Point2
 
 	@Override
 	public Point2D valueIn(Double t) {
-		if (Double.compare(getTMin(), t) > 0 || Double.compare(t, getTMax()) > 0)
-			throw new IllegalArgumentException("Parameter t should be in [" + getTMin() + "; " + getTMax() + "]. Current t = " + t);
+		if (Double.compare(getParameterMin(), t) > 0 || Double.compare(t, getParameterMax()) > 0)
+			throw new IllegalArgumentException("Parameter should be in [" + getParameterMin() + "; " + getParameterMax() + "]. Current t = " + t);
 		return new Point2D(getX().valueIn(t), getY().valueIn(t));
-
 	}
 
 	/*public static Spline naturalParametrization() {
@@ -103,6 +112,8 @@ public abstract class AbstractParametricCurve implements Function<Double, Point2
 
 	@Override
 	public Point2D derivative(int order, Double t) {
+		if (Double.compare(getParameterMin(), t) > 0 || Double.compare(t, getParameterMax()) > 0)
+			throw new IllegalArgumentException("Parameter should be in [" + getParameterMin() + "; " + getParameterMax() + "]. Current t = " + t);
 		return new Point2D(getX().derivative(order, t), getY().derivative(order, t));
 	}
 
@@ -117,11 +128,13 @@ public abstract class AbstractParametricCurve implements Function<Double, Point2
 		return radius;
 	}
 
-	public double getTMin() {
-		return tMin;
+	@Override
+	public double getParameterMin() {
+		return parameterMin;
 	}
 
-	public double getTMax() {
-		return tMax;
+	@Override
+	public double getParameterMax() {
+		return parameterMax;
 	}
 }

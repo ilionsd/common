@@ -1,4 +1,8 @@
-package com.insign.common.function;
+package com.insign.common.function.interpolation;
+
+import com.insign.common.function.Function;
+import com.insign.common.function.Point2D;
+import com.insign.common.function.Reparameterizable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,20 @@ public class Spline implements Function<Double, Double>, Reparameterizable<Splin
 		}
 	}
 
+	@Override
+	public Spline clone() {
+		Spline clone = null;
+		try {
+			clone = (Spline)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		clone.splineList = new ArrayList<SplineSegment>();
+		for (SplineSegment ss : splineList)
+			clone.splineList.add(ss.clone());
+		return clone;
+	}
+
 	private int getSegment(final double x) {
 		int segmentIndex = -1;
 		if (x < getLeftBound())
@@ -44,6 +62,7 @@ public class Spline implements Function<Double, Double>, Reparameterizable<Splin
 				middle = left + (right - left) / 2;
 				if (splineList.get(middle).isIn(x)) {
 					segmentIndex =  middle;
+					break;
 				} else if (splineList.get(middle).getLeftBound() > x)
 					right = middle - 1;
 				else
@@ -138,11 +157,17 @@ public class Spline implements Function<Double, Double>, Reparameterizable<Splin
 			double middle = (overallKnots[k - 1] + overallKnots[k]) / 2.0;
 			int selfIndex = getSegment(middle);
 			int otherIndex = spline.getSegment(middle);
-			ssList.add(splineList.get(selfIndex).reparameterize(spline.splineList.get(otherIndex)));
+			SplineSegment ssSelf = splineList.get(selfIndex).clone();
+			ssSelf.setLeftBound(overallKnots[k - 1]);
+			ssSelf.setRightBound(overallKnots[k]);
+			SplineSegment ssOther = spline.splineList.get(otherIndex).clone();
+			ssOther.setLeftBound(overallKnots[k - 1]);
+			ssOther.setRightBound(overallKnots[k]);
+			ssList.add(ssSelf.reparameterize(ssOther));
 		}
 		Spline reparametrized = new Spline(ssList.get(0));
-		for (SplineSegment ss : ssList)
-			reparametrized.addRight(ss);
+		for (int k = 1; k < ssList.size(); k++)
+			reparametrized.addRight(ssList.get(k));
 		return reparametrized;
 	}
 }
