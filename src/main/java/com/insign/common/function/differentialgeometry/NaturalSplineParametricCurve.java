@@ -29,7 +29,12 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 
 	@Override
 	public NaturalSplineParametricCurve clone() {
-		NaturalSplineParametricCurve clone = (NaturalSplineParametricCurve)super.clone();
+		NaturalSplineParametricCurve clone = null;
+		try {
+			clone = (NaturalSplineParametricCurve)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		clone.xs = xs.clone();
 		clone.ys = ys.clone();
 		return clone;
@@ -57,11 +62,11 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 		throw new NotImplementedException();
 	}
 
-	public static NaturalSplineParametricCurve fromCurve(final AbstractParametricCurve curve) {
+	public static NaturalSplineParametricCurve fromCurve(final ParametricCurve curve) {
 		return fromCurve(curve, null);
 	}
 
-	public static NaturalSplineParametricCurve fromCurve(final AbstractParametricCurve curve, __<Spline> naturalParametrization) {
+	public static NaturalSplineParametricCurve fromCurve(final ParametricCurve curve, __<Spline> naturalParametrization) {
 		Arrow<Double, Double> arcLengthFunction = new Arrow<Double, Double>() {
 			@Override
 			public Double valueIn(Double x) {
@@ -102,7 +107,8 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 		return naturalParametricCurve;
 	}
 
-	public static NaturalSplineParametricCurve fromCurve(final SplineParametricCurve curve) {
+
+/*	public static NaturalSplineParametricCurve fromCurve(final SplineParametricCurve curve) {
 		return fromCurve(curve, null);
 	}
 
@@ -135,7 +141,7 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 //			naturalParametrization.setRef(tsSpline);
 //
 //		return new NaturalSplineParametricCurve(xs, ys, xs.getLeftBound(), xs.getRightBound());
-	}
+	}*/
 }
 
 

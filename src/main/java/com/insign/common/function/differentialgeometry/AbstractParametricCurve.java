@@ -7,6 +7,7 @@ import com.insign.common.function.Point2D;
  * Created by ilion on 18.02.2015.
  */
 public abstract class AbstractParametricCurve implements ParametricCurve {
+	private static final double STEP_MULTIPLICATION_ERROR = 1e-10;
 
 	private double parameterMin, parameterMax;
 
@@ -16,14 +17,8 @@ public abstract class AbstractParametricCurve implements ParametricCurve {
 	}
 
 	@Override
-	public AbstractParametricCurve clone() {
-		AbstractParametricCurve clone = null;
-		try {
-			clone = (AbstractParametricCurve)super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return clone;
+	public AbstractParametricCurve clone() throws CloneNotSupportedException{
+		return (AbstractParametricCurve)super.clone();
 	}
 
 	protected abstract Function<Double, Double> getX();
@@ -32,7 +27,7 @@ public abstract class AbstractParametricCurve implements ParametricCurve {
 
 	@Override
 	public Point2D valueIn(Double t) {
-		if (Double.compare(getParameterMin(), t) > 0 || Double.compare(t, getParameterMax()) > 0)
+		if (Double.compare(getParameterMin() - STEP_MULTIPLICATION_ERROR, t) > 0 || Double.compare(t, getParameterMax() + STEP_MULTIPLICATION_ERROR) > 0)
 			throw new IllegalArgumentException("Parameter should be in [" + getParameterMin() + "; " + getParameterMax() + "]. Current t = " + t);
 		return new Point2D(getX().valueIn(t), getY().valueIn(t));
 	}

@@ -17,7 +17,12 @@ public class SplineParametricCurve extends AbstractParametricCurve {
 
 	@Override
 	public SplineParametricCurve clone() {
-		SplineParametricCurve clone = (SplineParametricCurve)super.clone();
+		SplineParametricCurve clone = null;
+		try {
+			clone = (SplineParametricCurve)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		clone.xt = xt.clone();
 		clone.yt = yt.clone();
 		return clone;

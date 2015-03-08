@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Created by ilion on 05.02.2015.
  */
-public class SplineSegment implements Function<Double, Double>, Reparameterizable<SplineSegment>, Cloneable {
+public class SplineSegment implements Function<Double, Double>, Cloneable {
 	private int power;
 
 	private double[] coefficients;
@@ -157,7 +157,7 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 		return sb.toString();
 	}
 
-	@Override
+/*	@Override
 	public SplineSegment reparameterize(final SplineSegment splineSegment) {
 		if (Double.compare(getLeftBound(), splineSegment.getLeftBound()) != 0 || Double.compare(getRightBound(), splineSegment.getRightBound()) != 0)
 			throw new IllegalArgumentException("Cannot reparameterize spline segments on unequal interval");
@@ -203,7 +203,7 @@ public class SplineSegment implements Function<Double, Double>, Reparameterizabl
 		for (int k = 0; k < coefficients.length; k++)
 			result[k] = coefficients[k] * scalar;
 		return result;
-	}
+	}*/
 }
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by ilion on 04.02.2015.
  */
-public class Spline implements Function<Double, Double>, Reparameterizable<Spline> {
+public class Spline implements Function<Double, Double> {
 
 	private List<SplineSegment> splineList = new ArrayList<SplineSegment>();
 
@@ -147,7 +147,7 @@ public class Spline implements Function<Double, Double>, Reparameterizable<Splin
 		return true;
 	}
 
-	@Override
+/*	@Override
 	public Spline reparameterize(final Spline spline) {
 		double[] selfKnots = getKnots();
 		double[] otherKnots = spline.getKnots();
@@ -169,5 +169,5 @@ public class Spline implements Function<Double, Double>, Reparameterizable<Splin
 		for (int k = 1; k < ssList.size(); k++)
 			reparametrized.addRight(ssList.get(k));
 		return reparametrized;
-	}
+	}*/
 }
