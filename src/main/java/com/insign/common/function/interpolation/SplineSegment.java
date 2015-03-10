@@ -16,6 +16,8 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 	private double leftBound, rightBound;
 
 	public SplineSegment(int power, double leftBound, double rightBound) {
+		if (Double.compare(leftBound, rightBound) >= 0)
+			throw new IllegalArgumentException("Left bound should be less than right bound: received leftBound=" + leftBound + " and rightBound=" + rightBound + ".");
 		this.power = power;
 		this.leftBound = leftBound;
 		this.rightBound = rightBound;
@@ -23,6 +25,8 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 	}
 
 	public SplineSegment(double[] coefficients, double leftBound, double rightBound) {
+		if (Double.compare(leftBound, rightBound) >= 0)
+			throw new IllegalArgumentException("Left bound should be less than right bound: received leftBound=" + leftBound + " and rightBound=" + rightBound + ".");
 		power = coefficients.length - 1;
 		this.coefficients = Arrays.copyOf(coefficients, coefficients.length);
 		this.leftBound = leftBound;

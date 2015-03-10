@@ -1,17 +1,15 @@
 package com.insign.common.function.interpolation;
 
 import com.insign.common.Entry;
-import com.insign.common.EntryWrapper;
 import com.insign.common.function.Arrow;
 import com.insign.common.function.Point2D;
-import com.insign.common.function.differentialgeometry.SplineParametricCurve;
+import com.insign.common.function.differentialgeometry.CubicSplineParametricCurve;
 import com.insign.common.linearalgebra.LinearObjects.Matrix;
 import com.insign.common.linearalgebra.LinearObjects.Vector;
 import com.insign.common.linearalgebra.MatrixImpl;
 import com.insign.common.linearalgebra.VectorImpl;
 import com.insign.common.linearalgebra.solve.LAES;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +29,7 @@ public interface Interpolation {
 
 		}
 
-		public static Spline Smoothing(final Point2D[] points, final double lambda) {
+		public static CubicSpline Smoothing(final Point2D[] points, final double lambda) {
 			//-- x indexes changes from 0 to n  --
 			int n = points.length - 1;
 			//-- h indexes changes from 0 to n-1 --
@@ -114,7 +112,7 @@ public interface Interpolation {
 					(d.get(1) - d.get(0)) / h[0] - (1.0 / 3.0) * (bExt.get(1) + 2.0 * bExt.get(0)) * h[0],
 					bExt.get(0),
 					(bExt.get(1) - bExt.get(0)) / (3.0 * h[0])};
-			Spline spline = new Spline(coefficients, points[0].getX(), points[1].getX());
+			CubicSpline spline = new CubicSpline(coefficients, points[0].getX(), points[1].getX());
 
 			for (int k = 1; k <= n - 1; k++) {
 				coefficients[0] = d.get(k);
@@ -129,7 +127,7 @@ public interface Interpolation {
 	}
 
 	public static class ParametricCurves {
-		public static SplineParametricCurve bySmoothingSpline(final List<Entry<Double, Point2D>> points, final double lambda) {
+		public static CubicSplineParametricCurve bySmoothingSpline(final List<Entry<Double, Point2D>> points, final double lambda) {
 
 			Point2D[] xtPoints = new Point2D[points.size()],
 					ytPoints = new Point2D[points.size()];
@@ -140,10 +138,10 @@ public interface Interpolation {
 				k++;
 			}
 
-			Spline xtSpline = Interpolation.Splines.Smoothing(xtPoints, lambda);
-			Spline ytSpline = Interpolation.Splines.Smoothing(ytPoints, lambda);
+			CubicSpline xtSpline = Interpolation.Splines.Smoothing(xtPoints, lambda);
+			CubicSpline ytSpline = Interpolation.Splines.Smoothing(ytPoints, lambda);
 
-			return new SplineParametricCurve(xtSpline, ytSpline, xtSpline.getLeftBound(), xtSpline.getRightBound());
+			return new CubicSplineParametricCurve(xtSpline, ytSpline, xtSpline.getLeftBound(), xtSpline.getRightBound());
 		}
 	}
 

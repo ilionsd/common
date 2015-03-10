@@ -6,32 +6,33 @@ import com.insign.common.function.Arrow;
 import com.insign.common.function.Point2D;
 import com.insign.common.function.integration.Integral;
 import com.insign.common.function.integration.Intergrate;
+import com.insign.common.function.interpolation.CubicSpline;
 import com.insign.common.function.interpolation.Interpolation;
-import com.insign.common.function.interpolation.Spline;
+import com.insign.common.function.interpolation.AbstractSpline;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by ilion on 25.02.2015.
  */
-public class NaturalSplineParametricCurve extends AbstractParametricCurve implements NaturalParametricCurve, Cloneable {
+public final class NaturalCubicSplineParametricCurve extends AbstractParametricCurve implements NaturalParametricCurve, Cloneable {
 
 	private static final double NATURAL_PARAMETRIZATION_INTEGRAL_PRECISION = 0.001;
-	private static final int NATURAL_PARAMETERIZATION_KNOTS_COUNT = 100;
+	private static final int NATURAL_PARAMETRIZATION_KNOTS_COUNT = 100;
 	private static final double NATURAL_PARAMETRIZATION_STEP = 0.01;
 
-	Spline xs, ys;
+	private CubicSpline xs, ys;
 
-	private NaturalSplineParametricCurve(Spline xs, Spline ys, double sMin, double sMax) {
+	private NaturalCubicSplineParametricCurve(CubicSpline xs, CubicSpline ys, double sMin, double sMax) {
 		super(sMin, sMax);
-		this.xs = new Spline(xs);
-		this.ys = new Spline(ys);
+		this.xs = xs.clone();
+		this.ys = ys.clone();
 	}
 
 	@Override
-	public NaturalSplineParametricCurve clone() {
-		NaturalSplineParametricCurve clone = null;
+	public NaturalCubicSplineParametricCurve clone() {
+		NaturalCubicSplineParametricCurve clone = null;
 		try {
-			clone = (NaturalSplineParametricCurve)super.clone();
+			clone = (NaturalCubicSplineParametricCurve)super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -41,32 +42,32 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 	}
 
 	@Override
-	protected Spline getX() {
+	protected CubicSpline getX() {
 		return xs;
 	}
 
 	@Override
-	protected Spline getY() {
+	protected CubicSpline getY() {
 		return ys;
 	}
 
-	public Spline getXSpline() {
+	public AbstractSpline getXSpline() {
 		return getX().clone();
 	}
 
-	public Spline getYSpline() {
+	public AbstractSpline getYSpline() {
 		return getY().clone();
 	}
 
-	private static Spline naturalParametrization() {
+	private static AbstractSpline naturalParametrization() {
 		throw new NotImplementedException();
 	}
 
-	public static NaturalSplineParametricCurve fromCurve(final ParametricCurve curve) {
+	public static NaturalCubicSplineParametricCurve fromCurve(final ParametricCurve curve) {
 		return fromCurve(curve, null);
 	}
 
-	public static NaturalSplineParametricCurve fromCurve(final ParametricCurve curve, __<Spline> naturalParametrization) {
+	public static NaturalCubicSplineParametricCurve fromCurve(final ParametricCurve curve, __<AbstractSpline> naturalParametrization) {
 		Arrow<Double, Double> arcLengthFunction = new Arrow<Double, Double>() {
 			@Override
 			public Double valueIn(Double x) {
@@ -74,11 +75,11 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 				return Math.sqrt(point.getX() * point.getX() + point.getY() * point.getY());
 			}
 		};
-		Point2D[] ts = new Point2D[NATURAL_PARAMETERIZATION_KNOTS_COUNT];
+		Point2D[] ts = new Point2D[NATURAL_PARAMETRIZATION_KNOTS_COUNT];
 		ts[0] = new Point2D(0, 0);
-		double actualStep = (curve.getParameterMax() - curve.getParameterMin()) / (NATURAL_PARAMETERIZATION_KNOTS_COUNT - 1);
+		double actualStep = (curve.getParameterMax() - curve.getParameterMin()) / (NATURAL_PARAMETRIZATION_KNOTS_COUNT - 1);
 
-		for (int k = 1; k < NATURAL_PARAMETERIZATION_KNOTS_COUNT; k++) {
+		for (int k = 1; k < NATURAL_PARAMETRIZATION_KNOTS_COUNT; k++) {
 			double t = ts[k - 1].getY() + actualStep;
 			Integral arcSegment = new Integral(arcLengthFunction, ts[k - 1].getY(), t);
 			double value = Intergrate.GaussLegendre.fivePointRule(arcSegment, NATURAL_PARAMETRIZATION_INTEGRAL_PRECISION);
@@ -86,12 +87,12 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 		}
 
 		if (naturalParametrization != null) {
-			Spline tsSpline = Interpolation.Splines.Smoothing(ts, 1);
+			AbstractSpline tsSpline = Interpolation.Splines.Smoothing(ts, 1);
 			naturalParametrization.setRef(tsSpline);
 		}
 
-		Point2D[] xs = new Point2D[NATURAL_PARAMETERIZATION_KNOTS_COUNT],
-				ys = new Point2D[NATURAL_PARAMETERIZATION_KNOTS_COUNT];
+		Point2D[] xs = new Point2D[NATURAL_PARAMETRIZATION_KNOTS_COUNT],
+				ys = new Point2D[NATURAL_PARAMETRIZATION_KNOTS_COUNT];
 
 		for (int k = 0; k < ts.length; k++) {
 			Point2D point = curve.valueIn(ts[k].getY());
@@ -99,10 +100,10 @@ public class NaturalSplineParametricCurve extends AbstractParametricCurve implem
 			ys[k] = new Point2D(ts[k].getX(), point.getY());
 		}
 
-		Spline xsSpline = Interpolation.Splines.Smoothing(xs, 1);
-		Spline ysSpline = Interpolation.Splines.Smoothing(ys, 1);
+		CubicSpline xsSpline = Interpolation.Splines.Smoothing(xs, 1);
+		CubicSpline ysSpline = Interpolation.Splines.Smoothing(ys, 1);
 
-		NaturalSplineParametricCurve naturalParametricCurve = new NaturalSplineParametricCurve(xsSpline, ysSpline, xsSpline.getLeftBound(), xsSpline.getRightBound());
+		NaturalCubicSplineParametricCurve naturalParametricCurve = new NaturalCubicSplineParametricCurve(xsSpline, ysSpline, xsSpline.getLeftBound(), xsSpline.getRightBound());
 
 		return naturalParametricCurve;
 	}
