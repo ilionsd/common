@@ -11,21 +11,24 @@ public class CubicSpline extends AbstractSpline implements Cloneable {
 
 	protected List<SplineSegment> splineList = new ArrayList<SplineSegment>();
 
+	private void initialize(SplineSegment ss) {
+		getSplineList().add(ss);
+		setPower(getSplineList().get(0).power());
+	}
+
 	public CubicSpline(double[] coefficients, double leftBound, double rightBound) {
 		super();
 		SplineSegment ss = new SplineSegment(coefficients, leftBound, rightBound);
-		if (ss.getPower() > MAX_POWER)
+		if (ss.power() > MAX_POWER)
 			throw new IllegalArgumentException("Cubic spline can not contain segments with power more than " + MAX_POWER + ".");
-		getSplineList().add(ss);
-		setPower(getSplineList().get(0).getPower());
+		initialize(ss);
 	}
 
 	public CubicSpline(SplineSegment splineSegment) {
 		super();
-		if (splineSegment.getPower() > MAX_POWER)
+		if (splineSegment.power() > MAX_POWER)
 			throw new IllegalArgumentException("Cubic spline can not contain segments with power more than " + MAX_POWER + ".");
-		getSplineList().add(new SplineSegment(splineSegment));
-		setPower(getSplineList().get(0).getPower());
+		initialize(splineSegment);
 	}
 
 	@Override
@@ -50,17 +53,12 @@ public class CubicSpline extends AbstractSpline implements Cloneable {
 	@Override
 	public void addRight(double[] coefficients, double rightBound) {
 		SplineSegment ss = new SplineSegment(coefficients, getRightBound(), rightBound);
-		addRight(ss, false);
+		addRight(ss);
 	}
 
 	@Override
-	public void addRight(SplineSegment ss) {
-		addRight(ss, true);
-	}
-
-	private void addRight(SplineSegment splineSegment, boolean needClone) {
-		splineSegment = (needClone)? splineSegment.clone():splineSegment;
-		if (splineSegment.getPower() > MAX_POWER)
+	public void addRight(SplineSegment splineSegment) {
+		if (splineSegment.power() > MAX_POWER)
 			throw new IllegalArgumentException("Cubic spline can not contain segments with power more than " + MAX_POWER + ".");
 		super.addRight(splineSegment);
 	}
@@ -68,17 +66,12 @@ public class CubicSpline extends AbstractSpline implements Cloneable {
 	@Override
 	public void addLeft(double[] coefficients, double leftBound) {
 		SplineSegment ss = new SplineSegment(coefficients, leftBound, getLeftBound());
-		addLeft(ss, false);
+		addLeft(ss);
 	}
 
 	@Override
-	public void addLeft(SplineSegment ss) {
-		addLeft(ss, true);
-	}
-
-	private void addLeft(SplineSegment splineSegment, boolean needClone) {
-		splineSegment = (needClone)? splineSegment.clone():splineSegment;
-		if (splineSegment.getPower() > MAX_POWER)
+	public void addLeft(SplineSegment splineSegment) {
+		if (splineSegment.power() > MAX_POWER)
 			throw new IllegalArgumentException("Cubic spline can not contain segments with power more than " + MAX_POWER + ".");
 		super.addLeft(splineSegment);
 	}

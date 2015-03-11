@@ -1,7 +1,7 @@
 package com.insign.common.function.interpolation;
 
+import com.insign.common.FactorialUtil;
 import com.insign.common.function.Function;
-import com.insign.common.function.Reparameterizable;
 
 import java.util.Arrays;
 
@@ -21,7 +21,7 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 		this.power = power;
 		this.leftBound = leftBound;
 		this.rightBound = rightBound;
-		coefficients = new double[getPower() + 1];
+		coefficients = new double[power() + 1];
 	}
 
 	public SplineSegment(double[] coefficients, double leftBound, double rightBound) {
@@ -45,26 +45,19 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 		return clone;
 	}
 
-	public SplineSegment(SplineSegment splineSegment) {
-		power = splineSegment.getPower();
-		leftBound = splineSegment.getLeftBound();
-		rightBound = splineSegment.getRightBound();
-		coefficients = Arrays.copyOf(splineSegment.coefficients, splineSegment.coefficients.length);
-	}
-
 	public void set(int k, double value) {
-		if (k > getPower())
+		if (k > power())
 			throw new ArrayIndexOutOfBoundsException(k);
 		coefficients[k] = value;
 	}
 
 	public double get(int k) {
-		if (k > getPower())
+		if (k > power())
 			throw new ArrayIndexOutOfBoundsException(k);
 		return coefficients[k];
 	}
 
-	public int getPower() {
+	public int power() {
 		return power;
 	}
 
@@ -72,8 +65,8 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 		double xPow = 1;
 		double xMul = x - leftBound;
 		double result = 0;
-		for (int k = order; k <= getPower(); k++) {
-			result += xPow * coefficients[k] * descendingFactorial(k, order);
+		for (int k = order; k <= power(); k++) {
+			result += xPow * coefficients[k] * FactorialUtil.fallingFactorial(k, order);
 			xPow *= xMul;
 		}
 		return result;
@@ -128,7 +121,7 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 
 	public String toString(Character variable) {
 		StringBuilder sb = new StringBuilder();
-		for (int index = 0; index <= getPower(); index++) {
+		for (int index = 0; index <= power(); index++) {
 			sb.append(monomToString(index, variable)).append(' ');
 		}
 		sb.append(segmentToString(variable));
@@ -168,7 +161,7 @@ public class SplineSegment implements Function<Double, Double>, Cloneable {
 		double[] result = new double[] {get(0)};
 		double[] replacement = new double[] {1};
 		int k = 0;
-		for (k = 1; k <= getPower(); k++) {
+		for (k = 1; k <= power(); k++) {
 			replacement = multiplySplines(replacement, splineSegment.coefficients);
 			result = addupSplines(result, multiplyScalar(replacement, get(k)));
 		}

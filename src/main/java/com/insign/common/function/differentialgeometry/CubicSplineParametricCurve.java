@@ -11,8 +11,8 @@ public class CubicSplineParametricCurve extends AbstractParametricCurve {
 
 	public CubicSplineParametricCurve(CubicSpline xt, CubicSpline yt, double tMin, double tMax) {
 		super(tMin, tMax);
-		this.xt = xt.clone();
-		this.yt = yt.clone();
+		this.xt = xt;
+		this.yt = yt;
 	}
 
 	@Override
@@ -29,20 +29,12 @@ public class CubicSplineParametricCurve extends AbstractParametricCurve {
 	}
 
 	@Override
-	protected CubicSpline getX() {
+	public CubicSpline getX() {
 		return xt;
 	}
 
 	@Override
-	protected CubicSpline getY() {
+	public CubicSpline getY() {
 		return yt;
-	}
-
-	public CubicSpline getXSpline() {
-		return getX().clone();
-	}
-
-	public CubicSpline getYSpline() {
-		return getY().clone();
 	}
 }

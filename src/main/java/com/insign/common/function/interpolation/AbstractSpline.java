@@ -1,9 +1,7 @@
 package com.insign.common.function.interpolation;
 
-import com.insign.common.function.Function;
 import com.insign.common.function.Point2D;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +18,7 @@ public abstract class AbstractSpline implements Spline {
 		return (AbstractSpline)super.clone();
 	}
 
-	protected int getSegment(final double x) {
+	public int getSegment(final double x) {
 		int segmentIndex = -1;
 		if (x < getLeftBound())
 			segmentIndex = 0;
@@ -60,6 +58,16 @@ public abstract class AbstractSpline implements Spline {
 	protected abstract List<SplineSegment> getSplineList();
 
 	@Override
+	public SplineSegment get(int k) {
+		return getSplineList().get(k);
+	}
+
+	@Override
+	public int segmentCount() {
+		return getSplineList().size();
+	}
+
+	@Override
 	public Double valueIn(final Double x) {
 		return getSplineList().get(getSegment(x)).valueIn(x);
 	}
@@ -73,9 +81,7 @@ public abstract class AbstractSpline implements Spline {
 	public void addRight(double[] coefficients, double rightBound) {
 		double existRightBound = getRightBound();
 		SplineSegment ss = new SplineSegment(coefficients, existRightBound, rightBound);
-		getSplineList().add(ss);
-		if (getPower() < ss.getPower())
-			setPower(ss.getPower());
+		addRight(ss);
 	}
 
 	@Override
@@ -83,17 +89,15 @@ public abstract class AbstractSpline implements Spline {
 		if (Double.compare(getRightBound(), ss.getLeftBound()) != 0)
 			throw new IllegalArgumentException("Spline segment discontinue spline");
 		getSplineList().add(ss);
-		if (getPower() < ss.getPower())
-			setPower(ss.getPower());
+		if (getPower() < ss.power())
+			setPower(ss.power());
 	}
 
 	@Override
 	public void addLeft(double[] coefficients, double leftBound) {
 		double existLeftBound = getLeftBound();
 		SplineSegment ss = new SplineSegment(coefficients, leftBound, existLeftBound);
-		getSplineList().add(0, ss);
-		if (getPower() < ss.getPower())
-			setPower(ss.getPower());
+		addLeft(ss);
 	}
 
 	@Override
@@ -101,8 +105,8 @@ public abstract class AbstractSpline implements Spline {
 		if (Double.compare(ss.getRightBound(), getLeftBound()) != 0)
 			throw new IllegalArgumentException("Spline segment discontinue spline");
 		getSplineList().add(0, ss);
-		if (getPower() < ss.getPower())
-			setPower(ss.getPower());
+		if (getPower() < ss.power())
+			setPower(ss.power());
 	}
 
 	@Override

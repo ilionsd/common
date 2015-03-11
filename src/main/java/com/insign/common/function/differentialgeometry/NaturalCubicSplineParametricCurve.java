@@ -24,8 +24,8 @@ public final class NaturalCubicSplineParametricCurve extends AbstractParametricC
 
 	private NaturalCubicSplineParametricCurve(CubicSpline xs, CubicSpline ys, double sMin, double sMax) {
 		super(sMin, sMax);
-		this.xs = xs.clone();
-		this.ys = ys.clone();
+		this.xs = xs;
+		this.ys = ys;
 	}
 
 	@Override
@@ -42,21 +42,13 @@ public final class NaturalCubicSplineParametricCurve extends AbstractParametricC
 	}
 
 	@Override
-	protected CubicSpline getX() {
+	public CubicSpline getX() {
 		return xs;
 	}
 
 	@Override
-	protected CubicSpline getY() {
+	public CubicSpline getY() {
 		return ys;
-	}
-
-	public AbstractSpline getXSpline() {
-		return getX().clone();
-	}
-
-	public AbstractSpline getYSpline() {
-		return getY().clone();
 	}
 
 	private static AbstractSpline naturalParametrization() {

@@ -17,5 +17,7 @@ public interface Spline extends Function<Double, Double> {
 	double getLeftBound();
 	double getRightBound();
 
+	SplineSegment get(int k);
 
+	int segmentCount();
 }
