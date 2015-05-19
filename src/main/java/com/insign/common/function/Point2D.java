@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Created by ilion on 09.02.2015.
  */
-public class Point2D {
+public class Point2D implements Cloneable{
 	public static Point2D ORIGIN = new Point2D(0, 0);
 
 	double x, y;
@@ -51,6 +51,17 @@ public class Point2D {
 	}
 
 	@Override
+	public Object clone() {
+		Point2D clone = null;
+		try {
+			clone = (Point2D)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
+	}
+
+	@Override
 	public String toString() {
 		return "(" + getX() + "; " + getY() + ")";
 	}
@@ -63,9 +74,25 @@ public class Point2D {
 		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 	}
 
-	public static double module(Point2D point) {
-		Objects.requireNonNull(point);
-		return Math.sqrt(point.getX() * point.getX() + point.getY() * point.getY());
+
+	public static class asVector {
+
+		public static double module(Point2D point) {
+			Objects.requireNonNull(point);
+			return Math.sqrt(point.getX() * point.getX() + point.getY() * point.getY());
+		}
+
+		public static double dotProduct(Point2D point1, Point2D point2) {
+			Objects.requireNonNull(point1);
+			Objects.requireNonNull(point2);
+			return point1.getX() * point2.getX() + point1.getY() * point2.getY();
+		}
+
+		public static double angle(Point2D point1, Point2D point2) {
+			Objects.requireNonNull(point1);
+			Objects.requireNonNull(point2);
+			return asVector.module(point1) * asVector.module(point2) / asVector.dotProduct(point1, point2);
+		}
 	}
 }
 

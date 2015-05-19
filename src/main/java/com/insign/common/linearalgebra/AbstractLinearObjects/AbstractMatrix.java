@@ -65,7 +65,7 @@ public abstract class AbstractMatrix implements Matrix {
 	public void setRow(int row, Vector vector) {
 		Objects.requireNonNull(vector, "Vector can not be null");
 		if (getColumnsCount() != vector.getSize())
-			throw new IllegalArgumentException("Vector could not be different size with columns count");
+			throw new IllegalArgumentException("Vector could not be different size with columns segmentCount");
 		for (int j = 0; j < getColumnsCount(); j++)
 			set(row, j, vector.get(j));
 	}
@@ -74,7 +74,7 @@ public abstract class AbstractMatrix implements Matrix {
 	public void setColumn(int column, Vector vector) {
 		Objects.requireNonNull(vector, "Vector can not be null");
 		if (getRowsCount() != vector.getSize())
-			throw new IllegalArgumentException("Vector could not be different size with rows count");
+			throw new IllegalArgumentException("Vector could not be different size with rows segmentCount");
 		for (int i = 0; i < getRowsCount(); i++)
 			set(column, i, vector.get(i));
 	}

@@ -1,5 +1,7 @@
 package com.insign.common.function;
 
+import com.insign.common.function.interpolation.Interpolation;
+import com.insign.common.function.interpolation.AbstractSpline;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,9 +32,9 @@ public class TestCases {
 				new Point2D(1075.0, 489.3707275390625),
 				new Point2D(1206.0, 553.2316284179688)};
 
-		Spline spline = Interpolation.Splines.Smoothing(arr, 0.5);
+		AbstractSpline spline = Interpolation.Splines.Smoothing(arr, 0.5);
 
-		Assert.assertTrue(Spline.isContinuous(spline, 1e-10));
+		Assert.assertTrue(AbstractSpline.isContinuous(spline, 1e-10));
 	}
 
 	@Test
@@ -49,8 +51,8 @@ public class TestCases {
 				new Point2D(0.8, 1.073),
 				new Point2D(0.9, 0.991)};
 
-		Spline spline = Interpolation.Splines.Smoothing(arr, 1);
+		AbstractSpline spline = Interpolation.Splines.Smoothing(arr, 1);
 
-		Assert.assertTrue(Spline.isContinuous(spline, 1e-10));
+		Assert.assertTrue(AbstractSpline.isContinuous(spline, 1e-10));
 	}
 }
