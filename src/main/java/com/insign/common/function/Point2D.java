@@ -36,6 +36,10 @@ public class Point2D implements Cloneable{
 		this.y = y;
 	}
 
+	public Point2D negate() {
+		return new Point2D(-getX(), -getY());
+	}
+
 	public boolean equals(Point2D point) {
 		Objects.requireNonNull(point);
 		if (Double.compare(getX(), point.getX()) == 0 && Double.compare(getY(), point.getY()) == 0)

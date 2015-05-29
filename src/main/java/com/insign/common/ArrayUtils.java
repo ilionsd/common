@@ -67,6 +67,13 @@ public class ArrayUtils {
 		return united;
 	}
 
+	public static <T> void setAll(T[] array, T value) {
+		Objects.requireNonNull(array);
+		for (int k = 0; k < array.length; k++) {
+			array[k] = value;
+		}
+	}
+
 	/*
 	public static Object[] toTypes(Object[] data, Class[] destTypes) {
 		if (data == null)
