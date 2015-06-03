@@ -1,4 +1,4 @@
-package com.insign.common;
+package com.insign.utils;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

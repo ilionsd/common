@@ -150,7 +150,7 @@ public abstract class AbstractSpline implements Spline {
 	public Spline reparameterize(final Spline spline) {
 		double[] selfKnots = getKnots();
 		double[] otherKnots = spline.getKnots();
-		double[] overallKnots = com.insign.common.ArrayUtils.union(selfKnots, otherKnots);
+		double[] overallKnots = com.insign.utils.ArrayUtils.union(selfKnots, otherKnots);
 		ArrayList<SplineSegment> ssList = new ArrayList<SplineSegment>();
 		for (int k = 1; k < overallKnots.length; k++) {
 			double middle = (overallKnots[k - 1] + overallKnots[k]) / 2.0;

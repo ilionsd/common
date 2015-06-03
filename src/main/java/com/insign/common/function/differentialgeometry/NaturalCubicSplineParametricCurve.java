@@ -1,7 +1,7 @@
 package com.insign.common.function.differentialgeometry;
 
 
-import com.insign.common.__;
+import com.insign.utils.__;
 import com.insign.common.function.Arrow;
 import com.insign.common.function.Point2D;
 import com.insign.common.function.integration.Integral;
@@ -116,7 +116,7 @@ public final class NaturalCubicSplineParametricCurve extends AbstractParametricC
 //		};
 //		double[] xtKnots = curve.getX().getKnots();
 //		double[] ytKnots = curve.getY().getKnots();
-//		double[] xyKnots = com.insign.common.ArrayUtils.union(xtKnots, ytKnots);
+//		double[] xyKnots = com.insign.utils.ArrayUtils.union(xtKnots, ytKnots);
 //		//-- Points format (s, t) - function t(s) --
 //		Point2D[] ts = new Point2D[xyKnots.length];
 //		ts[0] = new Point2D(0, 0);

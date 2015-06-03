@@ -6,7 +6,7 @@
 
     <!-- The Basics -->
     <groupId>com.insign</groupId>
-    <artifactId>linearalgebra</artifactId>
+    <artifactId>common</artifactId>
     <version>0.3</version>
     <packaging>jar</packaging>
     <name>Linear Algebra Library</name>

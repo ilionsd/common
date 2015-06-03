@@ -1,6 +1,6 @@
 package com.insign.common.function.interpolation;
 
-import com.insign.common.FactorialUtil;
+import com.insign.utils.FactorialUtil;
 import com.insign.common.function.Function;
 
 import java.util.Arrays;

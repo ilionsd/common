@@ -1,6 +1,6 @@
 package com.insign.common.function.interpolation;
 
-import com.insign.common.Entry;
+import com.insign.utils.Entry;
 import com.insign.common.function.Arrow;
 import com.insign.common.function.Point2D;
 import com.insign.common.function.differentialgeometry.CubicSplineParametricCurve;

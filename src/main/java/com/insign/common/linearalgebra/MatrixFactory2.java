@@ -96,7 +96,7 @@ public class MatrixFactory2 extends AbstractLinearFactory {
 		Constructors constructorType = getConstructorType(constructorParamTypes);
 		if (Constructors.UNKNOWN_CONSTRUCTOR.equals(constructorType))
 			throw new RuntimeException("Unknown constructor params set: " + ArrayUtils.toString(constructorParamTypes));
-		//Object[] constructorParamsCasted = com.insign.common.ArrayUtils.toTypes(constructorParams, paramsMap.get(constructorType));
+		//Object[] constructorParamsCasted = com.insign.utils.ArrayUtils.toTypes(constructorParams, paramsMap.get(constructorType));
 		Matrix matrix = null;
 		try {
 			matrix = (Matrix) mapping.get(clazz).get(constructorType).newInstance(constructorParams);

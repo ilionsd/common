@@ -1,4 +1,4 @@
-package com.insign.common;
+package com.insign.utils;
 
 /**
  * Created by ilion on 11.03.2015.
