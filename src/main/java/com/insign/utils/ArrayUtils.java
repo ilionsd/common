@@ -11,11 +11,11 @@ import java.util.TreeSet;
  */
 public class ArrayUtils {
 	public static <T extends Comparable> T[] merge(T[] first, T[] second) {
-		if (Objects.isNull(first))
-			if (Objects.isNull(second))
+		if (first == null)
+			if (second == null)
 				return null;
 			else return Arrays.copyOf(second, second.length);
-		else if (Objects.isNull(second))
+		else if (second == null)
 			return Arrays.copyOf(first, first.length);
 
 		Class<?> componentType = first.getClass().getComponentType();

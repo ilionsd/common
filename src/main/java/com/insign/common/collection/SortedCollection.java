@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class SortedCollection<E extends Comparable< ? super E>> extends AbstractCollection<E> {
 
-	private List list = new ArrayList();
+	private List<E> list = new ArrayList();
 
 	public SortedCollection() {
 		super();
@@ -38,7 +38,7 @@ public class SortedCollection<E extends Comparable< ? super E>> extends Abstract
 	}
 
 	public E get(int index) {
-		return (E) list.get(index);
+		return list.get(index);
 	}
 
 	public E getFirst() {
@@ -84,6 +84,14 @@ public class SortedCollection<E extends Comparable< ? super E>> extends Abstract
 			copy.add(get(k));
 		}
 		return copy;
+	}
+
+	public Object[] toArray() {
+		return list.toArray();
+	}
+
+	public <T> T[] toArray(T[] array) {
+		return  list.toArray(array);
 	}
 
 	protected static <E extends Comparable< ? super E>> int insertionIndexSearch(SortedCollection<E> list, E e) {
