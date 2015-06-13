@@ -92,7 +92,7 @@ public class Point2D implements Cloneable{
 			return point1.getX() * point2.getX() + point1.getY() * point2.getY();
 		}
 
-		public static double angle(Point2D point1, Point2D point2) {
+		public static double angleCos(Point2D point1, Point2D point2) {
 			Objects.requireNonNull(point1);
 			Objects.requireNonNull(point2);
 			return asVector.dotProduct(point1, point2) / (asVector.module(point1) * asVector.module(point2));
